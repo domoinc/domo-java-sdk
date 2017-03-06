@@ -1,0 +1,20 @@
+{
+  "generator-lib-java": {
+    "githubUser": "domoinc",
+    "authorName": "Domo",
+    "authorEmail": "clint.checketts@domo.com",
+    "libName": "domo-java-sdk",
+    "libGroup": "com.domo",
+    "libPackage": "com.domo.sdk",
+    "libVersion": "0.1.0",
+    "libDesc": "Official Domo Java SDK",
+    "targetJava": "1.6",
+    "libTags": "",
+    "bintrayUser": "checketts",
+    "bintrayRepo": "domo-java-sdk",
+    "bintraySignFiles": true,
+    "mavenCentralSync": false,
+    "enableQualityChecks": true,
+    "usedGeneratorVersion": "2.3.0"
+  }
+}
