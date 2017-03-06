@@ -11,32 +11,26 @@ public class UserClient {
     private final UrlBuilder urlBuilder;
     private final Transport transport;
 
+    /**
+     * @param urlBuilder
+     * @param transport
+     */
     public UserClient(UrlBuilder urlBuilder, Transport transport) {
         this.urlBuilder = urlBuilder;
         this.transport = transport;
     }
 
-//    POST /v1/users?sendInvite=true HTTP/1.1
-//    Content-Type: application/json
-//    Accept: application/json
-//    Host: api.domo.com
-//    Content-Length: 90
-//    Authorization: bearer <your-valid-oauth-access-token>
-//
-//    {
-//        "email" : "leonhard.euler@domo.com",
-//            "role" : "Admin",
-//            "name" : "Leonhard Euler"
-//    }
-    public User create(boolean sendInvite, User user) {
+
+    public User create(boolean sendInvite, CreateUserRequest newUser) {
         HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
                 .addQueryParameter("sendInvite", Boolean.toString(sendInvite))
                 .build();
 
-        return transport.postJson(url, user, User.class);
+        return transport.postJson(url, newUser, User.class);
     }
 
-    public List<User> get(long userId) {
+
+    public User get(long userId) {
         HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
                 .addPathSegment(Long.toString(userId))
                 .build();

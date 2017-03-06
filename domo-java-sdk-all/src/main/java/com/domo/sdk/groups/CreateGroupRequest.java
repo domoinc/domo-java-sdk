@@ -3,12 +3,12 @@ package com.domo.sdk.groups;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Group {
+public class CreateGroupRequest {
 
     private String name;
-
     @SerializedName("default")
     private boolean isDefault;
+
 
     public String getName() {
         return name;
