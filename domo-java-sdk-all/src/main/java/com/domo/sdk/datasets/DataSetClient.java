@@ -3,7 +3,6 @@ package com.domo.sdk.datasets;
 import com.domo.sdk.groups.Group;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
-import com.domo.sdk.users.User;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 
@@ -20,32 +19,11 @@ public class DataSetClient {
     }
 
 
-//    POST /v1/datasets/ HTTP/1.1
-//    Content-Type: application/json
-//    Accept: application/json
-//    Host: api.domo.com
-//    Content-Length: 255
-//    Authorization: bearer <your-valid-oauth-access-token>
-//
-//    {
-//        "name" : "Leonhard Euler Party",
-//            "description" : "Mathematician Guest List",
-//            "rows" : 0,
-//            "schema" : {
-//        "columns" : [ {
-//            "type" : "STRING",
-//                    "name" : "Friend"
-//        }, {
-//            "type" : "STRING",
-//                    "name" : "Attending"
-//        } ]
-//    }
-//    }
-    public Group create(Group group) {
+    public DataSet create(CreateDataSetRequest dataSet) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .build();
 
-        return transport.postJson(url, group, Group.class);
+        return transport.postJson(url, dataSet, DataSet.class);
     }
 
 
@@ -99,7 +77,7 @@ public class DataSetClient {
     }
 
 
-    //    Delete – Delete a specified DataSet in your Domo Warehouse
+    //    Delete – Delete a specified CreateDataSetRequest in your Domo Warehouse
 //    DELETE /v1/datasets/317970a1-6a6e-4f70-8e09-44cf5f34cf44 HTTP/1.1
 //    Host: api.domo.com
 //    Authorization: bearer <your-valid-oauth-access-token>
@@ -111,7 +89,7 @@ public class DataSetClient {
         transport.deleteJson(url);
     }
 
-    //    Push – Push data to specified DataSet
+    //    Push – Push data to specified CreateDataSetRequest
 //    PUT /v1/datasets/317970a1-6a6e-4f70-8e09-44cf5f34cf44/data HTTP/1.1
 //    Content-Type: text/csv
 //    Host: api.domo.com
@@ -124,7 +102,7 @@ public class DataSetClient {
 
 
 
-//    Pull – Pull data from a specified DataSet
+//    Pull – Pull data from a specified CreateDataSetRequest
 //    GET /v1/datasets/317970a1-6a6e-4f70-8e09-44cf5f34cf44/data?includeHeader=true&fileName=data-dump.csv HTTP/1.1
 //    Accept: text/csv
 //    Host: api.domo.com
