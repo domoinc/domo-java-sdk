@@ -1,6 +1,5 @@
 package com.domo.sdk.request;
 
-import com.domo.sdk.users.User;
 import com.google.gson.Gson;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -11,7 +10,6 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.List;
 
 public class Transport {
     private final OkHttpClient httpClient;
@@ -35,6 +33,9 @@ public class Transport {
 
         try {
             Response response = httpClient.newCall(request).execute();
+            if(response.code() > 399) {
+                throw new RequestException("Error making request url:"+url.toString()+" reponseBody:"+response.body().source().readUtf8());
+            }
             return gson.fromJson(response.body().charStream(), type);
         } catch (IOException e) {
             throw new RequestException("Error making request url:"+url.toString(), e);

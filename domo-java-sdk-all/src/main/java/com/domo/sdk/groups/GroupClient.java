@@ -12,7 +12,7 @@ import java.util.List;
 public class GroupClient {
     private final UrlBuilder urlBuilder;
     private final Transport transport;
-    private static final String URL_BASE ="/v1/groups";
+    private static final String URL_BASE ="v1/groups";
 
     public GroupClient(UrlBuilder urlBuilder, Transport transport) {
         this.urlBuilder = urlBuilder;

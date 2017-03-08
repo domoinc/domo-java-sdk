@@ -8,6 +8,7 @@ import okhttp3.HttpUrl;
 import java.util.List;
 
 public class UserClient {
+    private static final String USERS_URL = "v1/users";
     private final UrlBuilder urlBuilder;
     private final Transport transport;
 
@@ -22,7 +23,7 @@ public class UserClient {
 
 
     public User create(boolean sendInvite, CreateUserRequest newUser) {
-        HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
+        HttpUrl url = urlBuilder.fromPathSegments(USERS_URL)
                 .addQueryParameter("sendInvite", Boolean.toString(sendInvite))
                 .build();
 
@@ -31,7 +32,7 @@ public class UserClient {
 
 
     public User get(long userId) {
-        HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
+        HttpUrl url = urlBuilder.fromPathSegments(USERS_URL)
                 .addPathSegment(Long.toString(userId))
                 .build();
 
@@ -39,7 +40,7 @@ public class UserClient {
     }
 
     public List<User> list(int limit, int offset) {
-        HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
+        HttpUrl url = urlBuilder.fromPathSegments(USERS_URL)
                 .addQueryParameter("limit", Integer.toString(limit))
                 .addQueryParameter("offset", Integer.toString(offset))
                 .build();
@@ -49,7 +50,7 @@ public class UserClient {
 
 
     public User update(long userId, User user) {
-        HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
+        HttpUrl url = urlBuilder.fromPathSegments(USERS_URL)
                 .addPathSegment(Long.toString(userId))
                 .build();
 
@@ -58,7 +59,7 @@ public class UserClient {
 
 
     public void delete(long userId) {
-        HttpUrl url = urlBuilder.fromPathSegments("/v1/users")
+        HttpUrl url = urlBuilder.fromPathSegments(USERS_URL)
                 .addPathSegment(Long.toString(userId))
                 .build();
 

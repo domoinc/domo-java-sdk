@@ -12,13 +12,16 @@ public class UrlBuilder {
 
     public HttpUrl.Builder create() {
         HttpUrl.Builder builder = new HttpUrl.Builder();
-        if(config.useHttps()){
-            builder.scheme("https");
-        } else {
-            builder.scheme("http");
+        String prefix = "https";
+        if(!config.useHttps()){
+            prefix = "http";
         }
 
-        builder.host(config.getApiHost());
+        HttpUrl url = HttpUrl.parse(prefix+"://"+config.getApiHost());
+
+        builder.scheme(url.scheme());
+        builder.host(url.host());
+        builder.port(url.port());
 
         return builder;
     }
