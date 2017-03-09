@@ -9,6 +9,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 
 public class Transport {
@@ -17,6 +18,8 @@ public class Transport {
 
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType CSV
+            = MediaType.parse("text/csv; charset=utf-8");
 
 
     public Transport(OkHttpClient httpClient) {
@@ -82,5 +85,41 @@ public class Transport {
         } catch (IOException e) {
             throw new RequestException("Error deleting, url:"+url.toString(), e);
         }
+    }
+
+    public InputStream getCsv(HttpUrl url) {
+        Request request = new Request.Builder()
+                .header("Accept", "text/csv")
+                .url(url)
+                .build();
+
+        try {
+            Response response = httpClient.newCall(request).execute();
+            if(!response.isRedirect()) {
+                throw new RequestException("Error making request url:"+url.toString()+" responseBody:"+response.body().source().readUtf8());
+            }
+            return response.body().byteStream();
+        } catch (IOException e) {
+            throw new RequestException("Error making request url:"+url.toString(), e);
+        }
+    }
+
+    public void putCsv(HttpUrl url, InputStream contents) {
+        RequestBody requestBody = InputStreamRequestBody.create(CSV, contents);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+
+        try {
+            Response response = httpClient.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                throw new RequestException("Error uploading csv. url:"+url.toString()+" responseBody:"+response.body().source().readUtf8());
+            }
+        } catch (IOException e) {
+            throw new RequestException("Error uploading csv. url:"+url.toString(), e);
+        }
+
     }
 }

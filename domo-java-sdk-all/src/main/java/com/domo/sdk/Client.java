@@ -1,9 +1,13 @@
 package com.domo.sdk;
 
+import com.domo.sdk.datasets.DataSetClient;
+import com.domo.sdk.datasets.PDPClient;
+import com.domo.sdk.groups.GroupClient;
 import com.domo.sdk.request.Config;
 import com.domo.sdk.request.OAuthInterceptor;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
+import com.domo.sdk.streams.StreamsClient;
 import com.domo.sdk.users.UserClient;
 import okhttp3.OkHttpClient;
 
@@ -11,11 +15,17 @@ import java.util.concurrent.TimeUnit;
 
 public class Client {
     private final Config config;
+
     private final UserClient userClient;
+    private final GroupClient groupClient;
+    private final DataSetClient dataSetClient;
+    private final PDPClient pdpClient;
+    private final StreamsClient streamsClient;
 
     private final OkHttpClient httpClient;
     private final Transport transport;
     private final UrlBuilder urlBuilder;
+    ;
 
     private Client(Config config) {
         this.config = config;
@@ -27,6 +37,10 @@ public class Client {
         this.transport = new Transport(httpClient);
 
         this.userClient = new UserClient(urlBuilder, transport);
+        this.groupClient = new GroupClient(urlBuilder, transport);
+        this.dataSetClient = new DataSetClient(urlBuilder, transport);
+        this.pdpClient = new PDPClient(urlBuilder, transport);
+        this.streamsClient = new StreamsClient(urlBuilder, transport);
     }
 
     public static Client create(String clientId, String secret) {
@@ -43,5 +57,21 @@ public class Client {
 
     public UserClient userClient() {
         return userClient;
+    }
+
+    public GroupClient groupClient() {
+        return groupClient;
+    }
+
+    public DataSetClient dataSetClient() {
+        return dataSetClient;
+    }
+
+    public PDPClient pdpClient() {
+        return pdpClient;
+    }
+
+    public StreamsClient streamsClient() {
+        return streamsClient;
     }
 }
