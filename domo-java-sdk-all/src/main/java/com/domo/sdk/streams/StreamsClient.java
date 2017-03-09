@@ -1,19 +1,20 @@
 package com.domo.sdk.streams;
 
-import com.domo.sdk.groups.Group;
+import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
+import com.domo.sdk.streams.model.Stream;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 
 import java.util.List;
 
-public class DataSetClient {
+public class StreamsClient {
     private final UrlBuilder urlBuilder;
     private final Transport transport;
-    private static final String URL_BASE ="v1/datasets";
+    private static final String URL_BASE ="v1/streams";
 
-    public DataSetClient(UrlBuilder urlBuilder, Transport transport) {
+    public StreamsClient(UrlBuilder urlBuilder, Transport transport) {
         this.urlBuilder = urlBuilder;
         this.transport = transport;
     }
@@ -42,11 +43,11 @@ public class DataSetClient {
 //    },
 //        "updateMethod" : "APPEND"
 //    }
-    public Group create(Group group) {
+    public Stream create(Stream stream) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .build();
 
-        return transport.postJson(url, group, Group.class);
+        return transport.postJson(url, stream, Stream.class);
     }
 
 

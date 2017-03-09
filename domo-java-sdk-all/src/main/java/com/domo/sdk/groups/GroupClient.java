@@ -1,12 +1,12 @@
 package com.domo.sdk.groups;
 
+import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
-import com.domo.sdk.users.User;
+import com.domo.sdk.users.model.User;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 
-import java.net.URL;
 import java.util.List;
 
 public class GroupClient {
@@ -19,7 +19,7 @@ public class GroupClient {
         this.transport = transport;
     }
 
-    public Group create(Group group) {
+    public Group create( Group group) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .build();
 

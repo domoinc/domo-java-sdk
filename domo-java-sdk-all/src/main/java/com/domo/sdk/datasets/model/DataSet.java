@@ -1,4 +1,4 @@
-package com.domo.sdk.datasets;
+package com.domo.sdk.datasets.model;
 
 public class DataSet {
     private String id;
@@ -10,6 +10,18 @@ public class DataSet {
     private Owner owner;
     private String createdAt;
     private String updatedAt;
+
+    public DataSet() {
+        this.id = "";
+        this.name = "";
+        this.description = "";
+        this.rows = 0;
+        this.columns = 0;
+        this.schema = new Schema();
+        this.owner = new Owner();
+        this.createdAt = "";
+        this.updatedAt = "";
+    }
 
     public String getId() {
         return id;

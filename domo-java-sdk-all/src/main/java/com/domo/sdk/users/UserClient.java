@@ -2,6 +2,8 @@ package com.domo.sdk.users;
 
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
+import com.domo.sdk.users.model.CreateUserRequest;
+import com.domo.sdk.users.model.User;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 
@@ -22,7 +24,7 @@ public class UserClient {
     }
 
 
-    public User create(boolean sendInvite, CreateUserRequest newUser) {
+    public User create( boolean sendInvite, CreateUserRequest newUser) {
         HttpUrl url = urlBuilder.fromPathSegments(USERS_URL)
                 .addQueryParameter("sendInvite", Boolean.toString(sendInvite))
                 .build();

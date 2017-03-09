@@ -1,4 +1,4 @@
-package com.domo.sdk.datasets;
+package com.domo.sdk.datasets.model;
 
 public class Column {
     private ColumnType type;

@@ -2,7 +2,6 @@ package com.domo.sdk;
 
 import com.domo.sdk.request.Config;
 import com.domo.sdk.request.OAuthInterceptor;
-import com.domo.sdk.data.DataClient;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.users.UserClient;
@@ -13,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class Client {
     private final Config config;
     private final UserClient userClient;
-    private final DataClient dataClient;
 
     private final OkHttpClient httpClient;
     private final Transport transport;
@@ -29,7 +27,6 @@ public class Client {
         this.transport = new Transport(httpClient);
 
         this.userClient = new UserClient(urlBuilder, transport);
-        this.dataClient = new DataClient(urlBuilder, transport);
     }
 
     public static Client create(String clientId, String secret) {
@@ -46,9 +43,5 @@ public class Client {
 
     public UserClient userClient() {
         return userClient;
-    }
-
-    public DataClient dataClient() {
-        return dataClient;
     }
 }

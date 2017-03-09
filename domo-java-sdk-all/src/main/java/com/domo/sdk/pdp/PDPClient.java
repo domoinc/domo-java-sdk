@@ -1,6 +1,6 @@
 package com.domo.sdk.pdp;
 
-import com.domo.sdk.groups.Group;
+import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.google.gson.reflect.TypeToken;

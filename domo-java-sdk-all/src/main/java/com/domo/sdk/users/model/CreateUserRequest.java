@@ -1,4 +1,4 @@
-package com.domo.sdk.users;
+package com.domo.sdk.users.model;
 
 
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package com.domo.sdk.groups;
+package com.domo.sdk.groups.model;
 
 
 import com.google.gson.annotations.SerializedName;

@@ -1,4 +1,4 @@
-package com.domo.sdk.datasets;
+package com.domo.sdk.datasets.model;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
-package com.domo.sdk.groups;
+package com.domo.sdk.groups.model;
 
 
 import com.google.gson.annotations.SerializedName;
 
-public class UpdateGroupRequest {
+public class Group {
 
     private String name;
+
     @SerializedName("default")
     private boolean isDefault;
-
 
     public String getName() {
         return name;

@@ -1,4 +1,4 @@
-package com.domo.sdk.datasets;
+package com.domo.sdk.datasets.model;
 
 /**
  * Created by clintchecketts on 3/8/17.
