@@ -34,7 +34,6 @@ public class OAuthInterceptor implements Interceptor {
 
         //Build new request
         Request.Builder builder = request.newBuilder();
-        builder.header("Accept", "application/json"); //if necessary, say to consume JSON
 
         String token = accessToken.get(); //save token of this request for future
         setAuthHeader(builder, token); //write current token to request
@@ -79,6 +78,7 @@ public class OAuthInterceptor implements Interceptor {
 
         Request request = new Request.Builder()
                 .header("Authorization", Credentials.basic(config.getClientId(), config.getSecret()))
+                .header("Accept", "application/json")
                 .url(url)
                 .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope=user data"))
                 .build();

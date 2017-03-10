@@ -87,7 +87,7 @@ public class ClientTest {
         dsClient.update(ds);
 
         //Import DS
-        String input = "\"a\",\"b\",\"c\"\\n\"d\",\"e\",\"f\"\\n\"g\",\"h\",\"i\"\\n\"j\",\"k\",\"l\"\\n\"m\",\"n\",\"o\"\\n\"p\",\"q\",\"r\"";
+        String input = "\"a\",\"b\",\"c\"\n\"d\",\"e\",\"f\"\n\"g\",\"h\",\"i\"\n\"j\",\"k\",\"l\"\n\"m\",\"n\",\"o\"\n\"p\",\"q\",\"r\"";
         dsClient.importData(ds.getId(),new ByteArrayInputStream(input.getBytes(Charset.forName("UTF-8"))));
 
         //Export DS
@@ -110,7 +110,7 @@ public class ClientTest {
         dsClient.delete(ds.getId());
     }
 
-    static String convertStreamToString(java.io.InputStream is) {
+    private static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }

@@ -43,7 +43,7 @@ public class DataSetClient {
                 .addPathSegment(id)
                 .build();
 
-        return transport.getJson(url, DataSet.class);
+        return transport.getJson(url, DataSetAndPDP.class);
     }
 
 
@@ -57,7 +57,7 @@ public class DataSetClient {
         }
         HttpUrl url = builder.build();
 
-        return transport.getJson(url, new TypeToken<List<Group>>() {
+        return transport.getJson(url, new TypeToken<List<DataSetListResult>>() {
         }.getType());
     }
 

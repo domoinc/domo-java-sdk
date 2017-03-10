@@ -94,7 +94,7 @@ public class Transport {
 
         try {
             Response response = httpClient.newCall(request).execute();
-            if(!response.isRedirect()) {
+            if(!response.isSuccessful()) {
                 throw new RequestException("Error making request url:"+url.toString()+" responseBody:"+response.body().source().readUtf8());
             }
             return response.body().byteStream();
@@ -107,8 +107,9 @@ public class Transport {
         RequestBody requestBody = InputStreamRequestBody.create(CSV, contents);
 
         Request request = new Request.Builder()
+                .header("Accept", "text/csv")
                 .url(url)
-                .post(requestBody)
+                .put(requestBody)
                 .build();
 
         try {
