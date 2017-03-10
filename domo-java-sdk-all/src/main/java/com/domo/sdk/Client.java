@@ -13,6 +13,19 @@ import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * <p>Threadsafe client for interacting with Domo Public APIs. See <a href="https://developer.domo.com/docs/domo-apis/getting-started">
+ *     API docs</a> for complete details.
+ * </p>
+ * <p><b>Use {@link Client#create(String, String)} to instantiate this client.</b></p>
+ *
+ * Usage:
+ * <pre>
+ * {@code Client client = Client.create("<your app id>","<your app secret>");
+ *  client.userClient().list(10,0);
+ * }
+ * </pre>
+ */
 public class Client {
     private final Config config;
 
@@ -25,7 +38,6 @@ public class Client {
     private final OkHttpClient httpClient;
     private final Transport transport;
     private final UrlBuilder urlBuilder;
-    ;
 
     private Client(Config config) {
         this.config = config;
@@ -73,5 +85,13 @@ public class Client {
 
     public StreamsClient streamsClient() {
         return streamsClient;
+    }
+
+    public Transport getTransport() {
+        return transport;
+    }
+
+    public UrlBuilder getUrlBuilder() {
+        return urlBuilder;
     }
 }

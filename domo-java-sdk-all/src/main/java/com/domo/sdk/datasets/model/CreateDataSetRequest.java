@@ -9,7 +9,7 @@ public class CreateDataSetRequest {
     private String name;
     private String description;
     private long rows;
-    private List<Column> schema;
+    private Schema schema;
 
     public String getName() {
         return name;
@@ -35,11 +35,11 @@ public class CreateDataSetRequest {
         this.rows = rows;
     }
 
-    public List<Column> getSchema() {
+    public Schema getSchema() {
         return schema;
     }
 
-    public void setSchema(List<Column> schema) {
+    public void setSchema(Schema schema) {
         this.schema = schema;
     }
 }

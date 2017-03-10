@@ -61,7 +61,6 @@ public class Transport {
                 .header("Accept", "application/json")
                 .url(url)
                 .method(method, requestBody)
-                .post(requestBody)
                 .build();
 
         try {

@@ -80,7 +80,7 @@ public class OAuthInterceptor implements Interceptor {
         Request request = new Request.Builder()
                 .header("Authorization", Credentials.basic(config.getClientId(), config.getSecret()))
                 .url(url)
-                .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope=user"))
+                .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope=user data"))
                 .build();
 
         Response response;

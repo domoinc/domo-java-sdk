@@ -4,7 +4,6 @@ import com.domo.sdk.datasets.model.CreateDataSetRequest;
 import com.domo.sdk.datasets.model.DataSet;
 import com.domo.sdk.datasets.model.DataSetAndPDP;
 import com.domo.sdk.datasets.model.DataSetListResult;
-import com.domo.sdk.datasets.model.UpdateDataSetRequest;
 import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.request.RequestException;
 import com.domo.sdk.request.Transport;
@@ -14,7 +13,6 @@ import okhttp3.HttpUrl;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,26 +66,26 @@ public class DataSetClient {
     }
 
 
-    public DataSetAndPDP update(UpdateDataSetRequest request) {
+    public DataSetAndPDP update(DataSet request) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
-                .addPathSegment(Long.toString(request.getId()))
+                .addPathSegment(request.getId())
                 .build();
 
         return transport.putJson(url, request, DataSetAndPDP.class);
     }
 
-    public void delete(long id) {
+    public void delete(String id) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
-                .addPathSegment(Long.toString(id))
+                .addPathSegment(id)
                 .build();
 
         transport.deleteJson(url);
     }
 
 
-    public void importData(long id, InputStream contents) {
+    public void importData(String id, InputStream contents) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
-                .addPathSegment(Long.toString(id))
+                .addPathSegment(id)
                 .addPathSegment("data")
                 .build();
 
@@ -95,9 +93,9 @@ public class DataSetClient {
     }
 
 
-    public InputStream exportData(long id, boolean includeHeader) {
+    public InputStream exportData(String id, boolean includeHeader) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
-                .addPathSegment(Long.toString(id))
+                .addPathSegment(id)
                 .addPathSegment("data")
                 .addQueryParameter("includeHeader", Boolean.toString(includeHeader))
                 .build();
@@ -105,7 +103,7 @@ public class DataSetClient {
         return transport.getCsv(url);
     }
 
-    public void exportData(long id, boolean includeHeader, File file) {
+    public void exportData(String id, boolean includeHeader, File file) {
         BufferedInputStream input = new BufferedInputStream(exportData(id, includeHeader));
         try {
             OutputStream output = new FileOutputStream(file);

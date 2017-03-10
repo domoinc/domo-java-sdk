@@ -1,5 +1,7 @@
 package com.domo.sdk.datasets.model;
 
+import java.util.Objects;
+
 public class DataSet {
     private String id;
     private String name;
@@ -93,5 +95,41 @@ public class DataSet {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DataSet dataSet = (DataSet) o;
+        return rows == dataSet.rows &&
+                columns == dataSet.columns &&
+                Objects.equals(id, dataSet.id) &&
+                Objects.equals(name, dataSet.name) &&
+                Objects.equals(description, dataSet.description) &&
+                Objects.equals(schema, dataSet.schema) &&
+                Objects.equals(owner, dataSet.owner) &&
+                Objects.equals(createdAt, dataSet.createdAt) &&
+                Objects.equals(updatedAt, dataSet.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, rows, columns, schema, owner, createdAt, updatedAt);
+    }
+
+    @Override
+    public String toString() {
+        return "DataSet{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", rows=" + rows +
+                ", columns=" + columns +
+                ", schema=" + schema +
+                ", owner=" + owner +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
     }
 }
