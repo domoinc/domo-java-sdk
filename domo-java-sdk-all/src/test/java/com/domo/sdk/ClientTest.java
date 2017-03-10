@@ -2,12 +2,15 @@ package com.domo.sdk;
 
 import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.model.Column;
-import com.domo.sdk.datasets.model.ColumnType;
 import com.domo.sdk.datasets.model.CreateDataSetRequest;
 import com.domo.sdk.datasets.model.DataSet;
 import com.domo.sdk.datasets.model.DataSetListResult;
 import com.domo.sdk.datasets.model.Schema;
 import com.domo.sdk.request.Config;
+import com.domo.sdk.streams.StreamDataSetClient;
+import com.domo.sdk.streams.model.StreamDataSet;
+import com.domo.sdk.streams.model.StreamDataSetRequest;
+import com.domo.sdk.streams.model.StreamUploadMethod;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.CreateUserRequest;
 import com.domo.sdk.users.model.User;
@@ -20,10 +23,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.domo.sdk.datasets.model.ColumnType.STRING;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClientTest {
 
@@ -31,8 +34,8 @@ public class ClientTest {
 
     @Before
     public void setup() {
-        Config conf = new Config("8cc8ee6f-4b3c-4d60-86fe-0a0db0e7ba16",
-                "4fb05bb0e2416f4bbbffbd6033876e84bed6b2ad79db9d617f58b9f79f305a65", "localhost:19999", false);
+        Config conf = new Config("0ff09120-3a0a-43e3-8ff6-8cbb1cfc0118",
+                "8a5c069458dfc8de67ef35ac128a5e47a0a8410747187d5946dee978655eca43", "apigateway.big-ox.domorig.io", false);
 
         client = Client.create(conf);
     }
@@ -108,6 +111,51 @@ public class ClientTest {
 
         //Delete DS
         dsClient.delete(ds.getId());
+    }
+
+    @Test
+    public void streamDataSetClient_smokeTest() throws IOException {
+        StreamDataSetClient sdsClient = client.streamDataSetClient();
+
+        //Create Stream
+        DataSet ds = new DataSet();
+        ds.setName("Leonhard Euler Party");
+        ds.setDescription("Mathematician Guest List");
+        Schema schema = new Schema();
+        List<Column> columns = new ArrayList<>();
+        columns.add(new Column(STRING, "Friend"));
+        columns.add(new Column(STRING, "Attending"));
+        schema.setColumns(columns);
+
+        StreamDataSetRequest sdsRequest = new StreamDataSetRequest();
+        sdsRequest.setDataset(ds);
+        sdsRequest.setUpdateMethod(StreamUploadMethod.APPEND);
+        StreamDataSet fullSds = sdsClient.createStreamDataset(sdsRequest);
+        System.out.println("Created:" + fullSds);
+
+        //Get Stream
+
+
+
+        //sdsClient.getStreamDataset();
+
+        //List Streams
+
+        //Search Streams
+
+        //Update Stream
+
+        //Create Execution
+
+        //Get Execution
+
+        //List Executions
+
+        //Upload Parts
+
+        //Commit Execution
+
+        //Delete Stream
     }
 
     private static String convertStreamToString(java.io.InputStream is) {

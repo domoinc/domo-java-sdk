@@ -7,7 +7,7 @@ import com.domo.sdk.request.Config;
 import com.domo.sdk.request.OAuthInterceptor;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
-import com.domo.sdk.streams.StreamsClient;
+import com.domo.sdk.streams.StreamDataSetClient;
 import com.domo.sdk.users.UserClient;
 import okhttp3.OkHttpClient;
 
@@ -33,7 +33,7 @@ public class Client {
     private final GroupClient groupClient;
     private final DataSetClient dataSetClient;
     private final PDPClient pdpClient;
-    private final StreamsClient streamsClient;
+    private final StreamDataSetClient streamDataSetClient;
 
     private final OkHttpClient httpClient;
     private final Transport transport;
@@ -52,7 +52,7 @@ public class Client {
         this.groupClient = new GroupClient(urlBuilder, transport);
         this.dataSetClient = new DataSetClient(urlBuilder, transport);
         this.pdpClient = new PDPClient(urlBuilder, transport);
-        this.streamsClient = new StreamsClient(urlBuilder, transport);
+        this.streamDataSetClient = new StreamDataSetClient(urlBuilder, transport);
     }
 
     public static Client create(String clientId, String secret) {
@@ -83,8 +83,8 @@ public class Client {
         return pdpClient;
     }
 
-    public StreamsClient streamsClient() {
-        return streamsClient;
+    public StreamDataSetClient streamDataSetClient() {
+        return streamDataSetClient;
     }
 
     public Transport getTransport() {

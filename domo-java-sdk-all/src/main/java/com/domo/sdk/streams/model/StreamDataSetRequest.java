@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by bobbyswingler on 3/8/17.
  */
-public class Stream {
+public class StreamDataSetRequest {
 
-    private static final Logger logger = LoggerFactory.getLogger(Stream.class);
+    private static final Logger logger = LoggerFactory.getLogger(StreamDataSetRequest.class);
     private DataSet dataset;
     private String updateMethod;
 
-    public Stream(){
+    public StreamDataSetRequest(){
         this.dataset = new DataSet();
         this.updateMethod = StreamUploadMethod.APPEND;
     }
