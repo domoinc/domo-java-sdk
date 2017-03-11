@@ -9,15 +9,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class OAuthInterceptor implements Interceptor {
     private final AtomicReference<String> accessToken = new AtomicReference<String>();
 
     //Nested client and gson avoid circular dependency with Transport
-    private OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
 
     private final UrlBuilder urlBuilder;
@@ -41,7 +44,7 @@ public class OAuthInterceptor implements Interceptor {
         request = builder.build(); //overwrite old request
         Response response = chain.proceed(request); //perform request, here original request will be executed
 
-        if (response.code() == 401) { //if unauthorized
+        if (response.code() == 401 || response.code() == 500) { //if unauthorized
             synchronized (accessToken) { //perform all 401 in sync blocks, to avoid multiply token updates
                 String currentToken = accessToken.get(); //get currently stored token
 
@@ -76,16 +79,20 @@ public class OAuthInterceptor implements Interceptor {
         HttpUrl url = urlBuilder.fromPathSegments("oauth/token")
                 .build();
 
+        String scopes = config.getScopes()
+                .stream().map(s -> s.name().toLowerCase())
+                .collect(Collectors.joining(" "));
+
         Request request = new Request.Builder()
                 .header("Authorization", Credentials.basic(config.getClientId(), config.getSecret()))
                 .header("Accept", "application/json")
                 .url(url)
-                .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope=user data"))
+                .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope="+scopes))
                 .build();
 
         Response response;
         try {
-            response = client.newCall(request).execute();
+            response = config.okHttpClient().newCall(request).execute();
 
             OAuthResponse oauth = gson.fromJson(response.body().charStream(), OAuthResponse.class);
             accessToken.set(oauth.access_token);

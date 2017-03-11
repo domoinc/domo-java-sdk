@@ -4,12 +4,14 @@ import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.PDPClient;
 import com.domo.sdk.groups.GroupClient;
 import com.domo.sdk.request.Config;
+import com.domo.sdk.request.OAuthAuthenticator;
 import com.domo.sdk.request.OAuthInterceptor;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.streams.StreamDataSetClient;
 import com.domo.sdk.users.UserClient;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,18 +37,14 @@ public class Client {
     private final PDPClient pdpClient;
     private final StreamDataSetClient streamDataSetClient;
 
-    private final OkHttpClient httpClient;
     private final Transport transport;
     private final UrlBuilder urlBuilder;
 
     private Client(Config config) {
         this.config = config;
         this.urlBuilder = new UrlBuilder(config);
-        this.httpClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS)
-                .addInterceptor(new OAuthInterceptor(urlBuilder, config))
-                .build();
-        this.transport = new Transport(httpClient);
+
+        this.transport = new Transport(config.okHttpClient());
 
         this.userClient = new UserClient(urlBuilder, transport);
         this.groupClient = new GroupClient(urlBuilder, transport);
@@ -56,7 +54,10 @@ public class Client {
     }
 
     public static Client create(String clientId, String secret) {
-        return new Client(new Config(clientId, secret, "api.domo.com", false));
+        return new Client(Config.with().clientId(clientId)
+                                        .clientSecret(secret)
+                                        .build()
+                );
     }
 
     public static Client create(Config config) {

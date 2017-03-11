@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
@@ -67,7 +68,12 @@ public class Transport {
 
         try {
             Response response = httpClient.newCall(request).execute();
-            return gson.fromJson(response.body().charStream(), clazz);
+            if(response.isSuccessful()) {
+                return gson.fromJson(response.body().charStream(), clazz);
+            } else {
+                ErrorResponse err =  gson.fromJson(response.body().charStream(), ErrorResponse.class);
+                throw new RequestException(err);
+            }
         } catch (IOException e) {
             throw new RequestException("Error making request, url:"+url.toString(), e);
         }
@@ -105,9 +111,17 @@ public class Transport {
         }
     }
 
-    public void putCsv(HttpUrl url, InputStream contents) {
-        RequestBody requestBody = InputStreamRequestBody.create(CSV, contents);
+    public void putCsv(HttpUrl url, File contents) {
+        RequestBody requestBody = RequestBody.create(CSV, contents);
+        putCsvInternal(url, requestBody);
+    }
 
+    public void putCsv(HttpUrl url, String contents) {
+        RequestBody requestBody = RequestBody.create(CSV, contents);
+        putCsvInternal(url, requestBody);
+    }
+
+    private void putCsvInternal(HttpUrl url, RequestBody requestBody) {
         Request request = new Request.Builder()
                 .header("Accept", "text/csv")
                 .url(url)

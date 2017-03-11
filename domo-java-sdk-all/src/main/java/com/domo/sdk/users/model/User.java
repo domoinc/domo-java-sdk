@@ -70,7 +70,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Group{" +
+        return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", role='" + role + '\'' +

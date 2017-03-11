@@ -14,6 +14,7 @@ import okhttp3.HttpUrl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -83,7 +84,16 @@ public class DataSetClient {
     }
 
 
-    public void importData(String id, InputStream contents) {
+    public void importData(String id, String contents) {
+        HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
+                .addPathSegment(id)
+                .addPathSegment("data")
+                .build();
+
+        transport.putCsv(url, contents);
+    }
+
+    public void importData(String id, File contents) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(id)
                 .addPathSegment("data")

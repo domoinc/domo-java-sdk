@@ -14,6 +14,7 @@ import com.domo.sdk.streams.model.StreamUploadMethod;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.CreateUserRequest;
 import com.domo.sdk.users.model.User;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,35 +35,80 @@ public class ClientTest {
 
     @Before
     public void setup() {
-        Config conf = new Config("0ff09120-3a0a-43e3-8ff6-8cbb1cfc0118",
-                "8a5c069458dfc8de67ef35ac128a5e47a0a8410747187d5946dee978655eca43", "apigateway.big-ox.domorig.io", false);
+        Config rigConf = Config.with()
+                .clientId("d3090add-ebe5-4d6f-bfb0-2417a54d9ea2")
+                .clientSecret("50c40c6f25b26da321e1dae8aeb1e057f72673a34d0d7fba943f3d726df3f913")
+                .apiHost("localhost:19999")
+                .useHttps(false)
+                .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
+                .build();
 
-        client = Client.create(conf);
+//        client = Client.create(rigConf);
+
+        //Education.domo.com
+        client = Client.create(Config.with()
+                .clientId("64e0e76e-4916-4cd3-97cb-c55573c236ba")
+                .clientSecret("41c7e09fea52a8cc70b51bb3450841228631ad2dd55952baa5d068110e0e8595")
+                .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
+                .build());
+//        client = Client.create("dd2ccdab-4120-4885-be37-d24088de03c2", "72befda1108f59c94e0c91bdcc53f4018e45f8b47e8ef1fa9aa769999a46483b");
     }
 
+    @Test
+    public void handsOnWorkShop() throws IOException {
+        UserClient userClient = client.userClient();
+        User clint = userClient.get(669096686);
+        System.out.println(clint);
+
+        DataSetClient dsClient = client.dataSetClient();
+
+        //Create DS
+        CreateDataSetRequest createRequest = new CreateDataSetRequest();
+        createRequest.setName("Smoke Test DataSet");
+        createRequest.setDescription("FTW!");
+        createRequest.setSchema(new Schema(Lists.newArrayList(new Column(STRING, "name"))));
+
+        DataSet ds = dsClient.create(createRequest);
+        System.out.println("Created:"+ds);
+
+        //Get DS
+        DataSet ds2 = dsClient.get(ds.getId());
+        System.out.println("Get:"+ds2);
+
+        //Update DS
+        ds.setName("Smoke Test DataSet Update");
+        ds.setDescription("FTW! FTW! Updated");
+        ds.getSchema().setColumns(Lists.newArrayList(new Column(STRING, "1st Letters"),
+                new Column(STRING, "2nd Letters"),
+                new Column(STRING, "3rd Letters")));
+        dsClient.update(ds);
+
+        //Import DS
+        String input = "\"a\",\"b\",\"c\"\n\"d\",\"e\",\"f\"\n\"g\",\"h\",\"i\"\n\"j\",\"k\",\"l\"\n\"m\",\"n\",\"o\"\n\"p\",\"q\",\"r\"";
+        dsClient.importData(ds.getId(),input);
+
+    }
 
     @Test
     public void userClient_smokeTest() throws IOException {
         UserClient userClient = client.userClient();
 
-        User user = userClient.create(false, new CreateUserRequest("api.smoke.test@domo.com", "Admin", "API Smoke Test"));
-        System.out.println("Created user:"+user);
-
-        User user2 = userClient.get(user.getId());
-        System.out.println("Get user:"+user2);
-
-        user2.setName("Important Title");
-        User user3 = userClient.update(user.getId(), user2);
-        System.out.println("Updated user:"+user3);
-
-        //Patch user
-
-        userClient.delete(user.getId());
-
         List<User> list = userClient.list(30, 0);
         System.out.println(list);
-    }
 
+
+//        User user = userClient.create(false, new CreateUserRequest("api.smoke.test@domo.com", "Admin", "API Smoke Test"));
+//        System.out.println("Created user:"+user);
+
+        User user2 = userClient.get(669096686L);
+        System.out.println("Get user:"+user2);
+
+        user2.setName("Clint Checketts");
+        User user3 = userClient.update(user2.getId(), user2);
+        System.out.println("Updated user:"+user3);
+
+//        userClient.delete(user.getId());
+    }
 
     @Test
     public void dataSetClient_smokeTest() throws IOException {
@@ -91,7 +137,7 @@ public class ClientTest {
 
         //Import DS
         String input = "\"a\",\"b\",\"c\"\n\"d\",\"e\",\"f\"\n\"g\",\"h\",\"i\"\n\"j\",\"k\",\"l\"\n\"m\",\"n\",\"o\"\n\"p\",\"q\",\"r\"";
-        dsClient.importData(ds.getId(),new ByteArrayInputStream(input.getBytes(Charset.forName("UTF-8"))));
+        dsClient.importData(ds.getId(),input);
 
         //Export DS
         InputStream stream = dsClient.exportData(ds.getId(),true);
@@ -102,6 +148,8 @@ public class ClientTest {
         //Export to file
         File f = File.createTempFile("sample-export", ".csv");
         dsClient.exportData(ds.getId(),true, f);
+        System.out.println("Wrote out file:"+f.getAbsolutePath());
+
 
         //Policies
 
