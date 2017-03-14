@@ -5,11 +5,9 @@ import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.streams.model.StreamDataSet;
 import com.domo.sdk.streams.model.StreamDataSetRequest;
 import com.domo.sdk.streams.model.StreamExecution;
-import com.domo.sdk.streams.model.StreamUpdate;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 
-import java.io.InputStream;
 import java.util.List;
 
 public class StreamDataSetClient {
@@ -28,11 +26,11 @@ public class StreamDataSetClient {
      * - Use Stream DataSets to import massive or rapidly changing datasources via multi-part uploads
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Create%20a%20Stream
      */
-    public StreamDataSet createStreamDataset( StreamDataSetRequest stream) {
+    public StreamDataSet createStreamDataset( StreamDataSetRequest streamRequest) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .build();
 
-        return transport.postJson(url, stream, StreamDataSet.class);
+        return transport.postJson(url, streamRequest, StreamDataSet.class);
     }
 
 
@@ -41,13 +39,13 @@ public class StreamDataSetClient {
      * - Get the metadata for a given Stream DataSet
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Retrieve%20a%20Stream
      */
-    public StreamDataSetRequest getStreamDataset( long streamId) {
+    public StreamDataSet getStreamDataset(long streamId) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(Long.toString(streamId))
                 .addQueryParameter("fields", "all")
                 .build();
 
-        return transport.getJson(url, StreamDataSetRequest.class);
+        return transport.getJson(url, StreamDataSet.class);
     }
 
 
@@ -56,12 +54,12 @@ public class StreamDataSetClient {
      * - Get a list of metadata for each of your Stream DataSets
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20List%20Streams
      */
-    public List<StreamDataSetRequest> listStreamDatasets() {
+    public List<StreamDataSet> listStreamDatasets() {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addQueryParameter("fields", "all")
                 .build();
 
-        return transport.getJson(url, new TypeToken<List<StreamDataSetRequest>>(){}.getType());
+        return transport.getJson(url, new TypeToken<List<StreamDataSet>>(){}.getType());
     }
 
 
@@ -70,12 +68,12 @@ public class StreamDataSetClient {
      * - Update the metadata for a given Stream DataSet
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Partially%20Update%20a%20Stream
      */
-    public StreamDataSetRequest updateStreamDataset( long streamId, StreamUpdate update) {
+    public StreamDataSet updateStreamDataset( long streamId, StreamDataSetRequest update) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(Long.toString(streamId))
                 .build();
 
-        return transport.patchJson(url, update, StreamDataSetRequest.class);
+        return transport.patchJson(url, update, StreamDataSet.class);
     }
 
 
@@ -98,14 +96,14 @@ public class StreamDataSetClient {
      * - Search for a Stream DataSet by property
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Search%20Streams
      */
-    public List<StreamDataSetRequest> searchStreamDatasets( String property){
+    public List<StreamDataSet> searchStreamDatasets( String property){
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment("search")
                 .addQueryParameter("q", property)
                 .addQueryParameter("fields", "all")
                 .build();
 
-        return transport.getJson(url, new TypeToken<List<StreamDataSetRequest>>(){}.getType());
+        return transport.getJson(url, new TypeToken<List<StreamDataSet>>(){}.getType());
     }
 
 
@@ -114,13 +112,13 @@ public class StreamDataSetClient {
      * - Begin a multi-part upload by creating a Stream Execution
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Create%20a%20Stream%20Execution
      */
-    public StreamExecution createStreamExecution( long streamId){
+    public StreamExecution createStreamExecution(long streamId){
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(Long.toString(streamId))
                 .addPathSegment("executions")
                 .build();
 
-        return transport.postJson(url, "", StreamExecution.class);
+        return transport.postJson(url, null, StreamExecution.class);
     }
 
 
@@ -163,7 +161,7 @@ public class StreamDataSetClient {
      * - Each part should not exceed ??????? rows
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Upload%20a%20Part
      */
-    public void uploadDataPart(long streamId, long executionId, long partNum, InputStream contents){
+    public void uploadDataPart(long streamId, long executionId, long partNum, String contents){
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(Long.toString(streamId))
                 .addPathSegment("executions")

@@ -1,7 +1,5 @@
 package com.domo.sdk.datasets.model;
 
-import java.util.List;
-
 /**
  * Created by clintchecketts on 3/8/17.
  */
@@ -10,6 +8,13 @@ public class CreateDataSetRequest {
     private String description;
     private long rows;
     private Schema schema;
+
+    public CreateDataSetRequest(){
+        this.name="";
+        this.description="";
+        this.rows=0;
+        this.schema = new Schema();
+    }
 
     public String getName() {
         return name;

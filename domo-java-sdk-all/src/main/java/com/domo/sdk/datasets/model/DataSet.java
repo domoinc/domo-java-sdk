@@ -126,7 +126,7 @@ public class DataSet {
                 ", description='" + description + '\'' +
                 ", rows=" + rows +
                 ", columns=" + columns +
-                ", schema=" + schema +
+                ", schema=" + schema.toString() +
                 ", owner=" + owner +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +

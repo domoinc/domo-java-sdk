@@ -9,6 +9,11 @@ public class Owner {
     private long id;
     private String name;
 
+    public Owner(){
+        this.id = 0;
+        this.name = "";
+    }
+
     public long getId() {
         return id;
     }

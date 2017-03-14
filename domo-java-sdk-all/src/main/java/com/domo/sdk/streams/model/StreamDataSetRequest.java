@@ -1,29 +1,26 @@
 package com.domo.sdk.streams.model;
 
-import com.domo.sdk.datasets.model.DataSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.domo.sdk.datasets.model.CreateDataSetRequest;
 
 /**
  * Created by bobbyswingler on 3/8/17.
  */
 public class StreamDataSetRequest {
 
-    private static final Logger logger = LoggerFactory.getLogger(StreamDataSetRequest.class);
-    private DataSet dataset;
+    private CreateDataSetRequest dataSet;
     private String updateMethod;
 
     public StreamDataSetRequest(){
-        this.dataset = new DataSet();
+        this.dataSet = new CreateDataSetRequest();
         this.updateMethod = StreamUploadMethod.APPEND;
     }
 
-    public DataSet getDataset() {
-        return dataset;
+    public CreateDataSetRequest getDataset() {
+        return dataSet;
     }
 
-    public void setDataset( DataSet dataset ) {
-        this.dataset = dataset;
+    public void setDataset( CreateDataSetRequest dataset ) {
+        this.dataSet = dataset;
     }
 
     public String getUpdateMethod() {
