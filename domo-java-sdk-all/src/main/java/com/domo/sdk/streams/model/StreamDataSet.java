@@ -7,11 +7,11 @@ import com.domo.sdk.datasets.model.DataSet;
  */
 public class StreamDataSet {
 
-    private String createdAt;
-    private DataSet dataSet;
     private long id;
-    private String modifiedAt;
+    private DataSet dataSet;
     private String updateMethod;
+    private String createdAt;
+    private String modifiedAt;
 
     public StreamDataSet(){
         this.id = 0;

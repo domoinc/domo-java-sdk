@@ -10,10 +10,11 @@ import com.domo.sdk.groups.GroupClient;
 import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.groups.model.UpdateGroupRequest;
 import com.domo.sdk.request.Config;
-import com.domo.sdk.request.Scope;
 import com.domo.sdk.streams.StreamDataSetClient;
+import com.domo.sdk.streams.model.CreateStreamDataSetRequest;
 import com.domo.sdk.streams.model.StreamDataSet;
 import com.domo.sdk.streams.model.StreamDataSetRequest;
+import com.domo.sdk.streams.model.StreamExecution;
 import com.domo.sdk.streams.model.StreamUploadMethod;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.CreateUserRequest;
@@ -23,12 +24,9 @@ import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.domo.sdk.datasets.model.ColumnType.STRING;
@@ -186,47 +184,62 @@ public class ClientTest {
 
     @Test
     public void streamDataSetClient_smokeTest() throws IOException {
+
         StreamDataSetClient sdsClient = client.streamDataSetClient();
 
-        //Create Stream
-        DataSet ds = new DataSet();
+        //Build DataSet to populate the create stream request
+        CreateStreamDataSetRequest ds = new CreateStreamDataSetRequest();
         ds.setName("Leonhard Euler Party");
         ds.setDescription("Mathematician Guest List");
-        Schema schema = new Schema();
-        List<Column> columns = new ArrayList<>();
-        columns.add(new Column(STRING, "Friend"));
-        columns.add(new Column(STRING, "Attending"));
-        schema.setColumns(columns);
+        ds.setSchema(new Schema(Lists.newArrayList(new Column(STRING, "Friend"), new Column(STRING, "Attending"))));
 
+        //Create Stream
         StreamDataSetRequest sdsRequest = new StreamDataSetRequest();
         sdsRequest.setDataset(ds);
-        sdsRequest.setUpdateMethod(StreamUploadMethod.APPEND);
-        StreamDataSet fullSds = sdsClient.createStreamDataset(sdsRequest);
-        System.out.println("Created:" + fullSds);
+        sdsRequest.setUpdateMethod(StreamUploadMethod.REPLACE);
+        StreamDataSet sds = sdsClient.createStreamDataset(sdsRequest);
+        System.out.println("Created:" + sds);
 
         //Get Stream
-
-
-
-        //sdsClient.getStreamDataset();
+        StreamDataSet retrievedSds = sdsClient.getStreamDataset(sds.getId());
+        System.out.println("Retrieved:" + retrievedSds);
 
         //List Streams
+        List<StreamDataSet> listedSds = sdsClient.listStreamDatasets();
+        System.out.println("Listed Streams: " + listedSds);
 
         //Search Streams
+        List<StreamDataSet> searchedSds = sdsClient.searchStreamDatasets("dataSource.name:" + ds.getName());
+        System.out.println("Searched Streams: " + searchedSds);
 
         //Update Stream
+        sdsRequest.setUpdateMethod(StreamUploadMethod.APPEND);
+        sdsRequest.getDataset().setDescription("Bacon!");
+        StreamDataSet updatedSds = sdsClient.updateStreamDataset(sds.getId(), sdsRequest);
+        System.out.println("Updated Stream: " + updatedSds);
 
         //Create Execution
+        StreamExecution execution = sdsClient.createStreamExecution(sds.getId());
+        System.out.println("Created Execution: " + execution);
 
         //Get Execution
+        StreamExecution retrievedExecution = sdsClient.getStreamExecution(sds.getId(), execution.getId());
+        System.out.println("Retrieved Execution: " + retrievedExecution);
 
         //List Executions
+        List<StreamExecution> listedExecutions = sdsClient.listStreamExecutions(sds.getId(), 50, 0);
+        System.out.println("Listed Executions: " + listedExecutions);
 
         //Upload Parts
+        sdsClient.uploadDataPart(sds.getId(), execution.getId(), 1, "\"Pythagoras\",\"FALSE\"\n\"Alan Turing\",\"TRUE\"\n\"George Boole\",\"TRUE\"");
 
         //Commit Execution
+        StreamExecution committedExecution = sdsClient.commitStreamExecution(sds.getId(), execution.getId());
+        System.out.println("Committed Execution: " + committedExecution);
 
         //Delete Stream
+        sdsClient.deleteStreamDataset(sds.getId());
+        System.out.println("Deleting Dataset: " + sds);
     }
 
     private static String convertStreamToString(java.io.InputStream is) {
