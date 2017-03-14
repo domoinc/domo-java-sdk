@@ -20,11 +20,12 @@ public class StreamDataSetClient {
         this.transport = transport;
     }
 
-
     /**
      * CREATE A STREAM DATASET
      * - Use Stream DataSets to import massive or rapidly changing datasources via multi-part uploads
      * - https://developer.domo.com/docs/domo-apis/stream-apis#API%20-%20Create%20a%20Stream
+     * @param streamRequest
+     * @return the newly created Stream's metadata
      */
     public StreamDataSet createStreamDataset( StreamDataSetRequest streamRequest) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)

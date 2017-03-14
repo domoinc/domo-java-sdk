@@ -11,7 +11,6 @@ import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.groups.model.UpdateGroupRequest;
 import com.domo.sdk.request.Config;
 import com.domo.sdk.streams.StreamDataSetClient;
-import com.domo.sdk.streams.model.CreateStreamDataSetRequest;
 import com.domo.sdk.streams.model.StreamDataSet;
 import com.domo.sdk.streams.model.StreamDataSetRequest;
 import com.domo.sdk.streams.model.StreamExecution;
@@ -137,10 +136,9 @@ public class ClientTest {
 
         //Create DS
         CreateDataSetRequest createRequest = new CreateDataSetRequest();
-        createRequest.setName("Smoke Test DataSet");
-        createRequest.setDescription("FTW!");
-        createRequest.setSchema(new Schema(Lists.newArrayList(new Column(STRING, "name"))));
-
+        createRequest.setName("Leonhard Euler Party");
+        createRequest.setDescription("Mathematician Guest List");
+        createRequest.setSchema(new Schema(Lists.newArrayList(new Column(STRING, "Friend"))));
         DataSet ds = dsClient.create(createRequest);
         System.out.println("Created:"+ds);
 
@@ -149,16 +147,14 @@ public class ClientTest {
         System.out.println("Get:"+ds2);
 
         //Update DS
-        ds.setName("Smoke Test DataSet Update");
-        ds.setDescription("FTW! FTW! Updated");
-        ds.getSchema().setColumns(Lists.newArrayList(new Column(STRING, "1st Letters"),
-                new Column(STRING, "2nd Letters"),
-                new Column(STRING, "3rd Letters")));
+        ds.setName("Leonhard Euler Party - Update");
+        ds.setDescription("Mathematician Guest List - Update");
+        ds.getSchema().setColumns(Lists.newArrayList(new Column(STRING, "Friend"), new Column(STRING, "Attending")));
         dsClient.update(ds);
 
         //Import DS
-        String input = "\"a\",\"b\",\"c\"\n\"d\",\"e\",\"f\"\n\"g\",\"h\",\"i\"\n\"j\",\"k\",\"l\"\n\"m\",\"n\",\"o\"\n\"p\",\"q\",\"r\"";
-        dsClient.importData(ds.getId(),input);
+        String csvInput = "\"Pythagoras\",\"FALSE\"\n\"Alan Turing\",\"TRUE\"\n\"George Boole\",\"TRUE\"";
+        dsClient.importData(ds.getId(), csvInput);
 
         //Export DS
         InputStream stream = dsClient.exportData(ds.getId(),true);
@@ -170,7 +166,6 @@ public class ClientTest {
         File f = File.createTempFile("sample-export", ".csv");
         dsClient.exportData(ds.getId(),true, f);
         System.out.println("Wrote out file:"+f.getAbsolutePath());
-
 
         //Policies
 
@@ -188,7 +183,7 @@ public class ClientTest {
         StreamDataSetClient sdsClient = client.streamDataSetClient();
 
         //Build DataSet to populate the create stream request
-        CreateStreamDataSetRequest ds = new CreateStreamDataSetRequest();
+        CreateDataSetRequest ds = new CreateDataSetRequest();
         ds.setName("Leonhard Euler Party");
         ds.setDescription("Mathematician Guest List");
         ds.setSchema(new Schema(Lists.newArrayList(new Column(STRING, "Friend"), new Column(STRING, "Attending"))));
@@ -196,7 +191,7 @@ public class ClientTest {
         //Create Stream
         StreamDataSetRequest sdsRequest = new StreamDataSetRequest();
         sdsRequest.setDataset(ds);
-        sdsRequest.setUpdateMethod(StreamUploadMethod.REPLACE);
+        sdsRequest.setUpdateMethod(StreamUploadMethod.APPEND);
         StreamDataSet sds = sdsClient.createStreamDataset(sdsRequest);
         System.out.println("Created:" + sds);
 
@@ -213,8 +208,7 @@ public class ClientTest {
         System.out.println("Searched Streams: " + searchedSds);
 
         //Update Stream
-        sdsRequest.setUpdateMethod(StreamUploadMethod.APPEND);
-        sdsRequest.getDataset().setDescription("Bacon!");
+        sdsRequest.setUpdateMethod(StreamUploadMethod.REPLACE); //Only the stream metadata fields can be updated, not the dataSet metadata
         StreamDataSet updatedSds = sdsClient.updateStreamDataset(sds.getId(), sdsRequest);
         System.out.println("Updated Stream: " + updatedSds);
 
@@ -231,7 +225,9 @@ public class ClientTest {
         System.out.println("Listed Executions: " + listedExecutions);
 
         //Upload Parts
-        sdsClient.uploadDataPart(sds.getId(), execution.getId(), 1, "\"Pythagoras\",\"FALSE\"\n\"Alan Turing\",\"TRUE\"\n\"George Boole\",\"TRUE\"");
+        String csvInput = "\"Pythagoras\",\"FALSE\"\n\"Alan Turing\",\"TRUE\"\n\"George Boole\",\"TRUE\"";
+        int partNum = 1;
+        sdsClient.uploadDataPart(sds.getId(), execution.getId(), partNum, csvInput);
 
         //Commit Execution
         StreamExecution committedExecution = sdsClient.commitStreamExecution(sds.getId(), execution.getId());
@@ -240,6 +236,10 @@ public class ClientTest {
         //Delete Stream
         sdsClient.deleteStreamDataset(sds.getId());
         System.out.println("Deleting Dataset: " + sds);
+
+        //Verify Stream Deletion
+        List<StreamDataSet> verifiedDeletion = sdsClient.listStreamDatasets();
+        System.out.println("Verified Stream Deletion: " + verifiedDeletion);
     }
 
     private static String convertStreamToString(java.io.InputStream is) {

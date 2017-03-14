@@ -81,8 +81,6 @@ public class Transport {
 
     public void deleteJson(HttpUrl url) {
         Request request = new Request.Builder()
-                .header("Content-Type", "application/json")
-                .header("Accept", "application/json")
                 .url(url)
                 .delete()
                 .build();
@@ -123,7 +121,7 @@ public class Transport {
 
     private void putCsvInternal(HttpUrl url, RequestBody requestBody) {
         Request request = new Request.Builder()
-                .header("Accept", "text/csv")
+                .header("Content-Type", "text/csv")
                 .url(url)
                 .put(requestBody)
                 .build();

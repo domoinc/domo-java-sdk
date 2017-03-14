@@ -1,23 +1,25 @@
 package com.domo.sdk.streams.model;
 
+import com.domo.sdk.datasets.model.CreateDataSetRequest;
+
 /**
  * Created by bobbyswingler on 3/8/17.
  */
 public class StreamDataSetRequest {
 
-    private CreateStreamDataSetRequest dataSet;
+    private CreateDataSetRequest dataSet;
     private String updateMethod;
 
     public StreamDataSetRequest(){
-        this.dataSet = new CreateStreamDataSetRequest();
+        this.dataSet = new CreateDataSetRequest();
         this.updateMethod = StreamUploadMethod.APPEND;
     }
 
-    public CreateStreamDataSetRequest getDataset() {
+    public CreateDataSetRequest getDataset() {
         return dataSet;
     }
 
-    public void setDataset( CreateStreamDataSetRequest dataset ) {
+    public void setDataset( CreateDataSetRequest dataset ) {
         this.dataSet = dataset;
     }
 
