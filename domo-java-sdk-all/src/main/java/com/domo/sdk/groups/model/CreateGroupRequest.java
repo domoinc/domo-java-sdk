@@ -25,4 +25,12 @@ public class CreateGroupRequest {
     public void setDefault(boolean aDefault) {
         isDefault = aDefault;
     }
+
+    @Override
+    public String toString() {
+        return "CreateGroupRequest{" +
+                "name='" + name + '\'' +
+                ", isDefault=" + isDefault +
+                '}';
+    }
 }

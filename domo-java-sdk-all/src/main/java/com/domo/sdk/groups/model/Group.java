@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class Group {
 
+    private Long id;
     private String name;
-
-    @SerializedName("default")
-    private boolean isDefault;
+    private boolean isActive;
+    private Long creatorId;
 
     public String getName() {
         return name;
@@ -18,11 +18,42 @@ public class Group {
         this.name = name;
     }
 
-    public boolean isDefault() {
-        return isDefault;
+    public Long getId() {
+        return id;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setId(String id) {
+        this.id = Long.parseLong(id);
+    }
+
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public Long getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(Long creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    @Override
+    public String toString() {
+        return "Group{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isActive=" + isActive +
+                ", creatorId=" + creatorId +
+                '}';
     }
 }

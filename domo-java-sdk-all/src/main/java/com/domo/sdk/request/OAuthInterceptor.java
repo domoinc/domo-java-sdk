@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 public class OAuthInterceptor implements Interceptor {
-    private final AtomicReference<String> accessToken = new AtomicReference<String>();
+    private final AtomicReference<String> accessToken = new AtomicReference<String>("starterTokenTheIsInvalid");
 
     //Nested client and gson avoid circular dependency with Transport
     private final Gson gson = new Gson();
@@ -34,6 +34,10 @@ public class OAuthInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
+        if(request.header("Authorization") != null) {
+            //Skip this interceptor if auth is manually set
+            return chain.proceed(request);
+        }
 
         //Build new request
         Request.Builder builder = request.newBuilder();
@@ -44,7 +48,7 @@ public class OAuthInterceptor implements Interceptor {
         request = builder.build(); //overwrite old request
         Response response = chain.proceed(request); //perform request, here original request will be executed
 
-        if (response.code() == 401 || response.code() == 500) { //if unauthorized
+        if (response.code() == 401) { //if unauthorized
             synchronized (accessToken) { //perform all 401 in sync blocks, to avoid multiply token updates
                 String currentToken = accessToken.get(); //get currently stored token
 

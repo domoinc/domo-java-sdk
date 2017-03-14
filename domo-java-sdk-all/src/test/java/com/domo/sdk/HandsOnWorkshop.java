@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.domo.sdk.datasets.model.ColumnType.STRING;
 import static com.domo.sdk.request.Scope.DATA;
+import static com.domo.sdk.request.Scope.USER;
 
 public class HandsOnWorkshop {
 
@@ -31,15 +32,16 @@ public class HandsOnWorkshop {
         //Create client (step 1 & 2)
         Client client = Client.create(Config.with()
                 .scope(DATA)
-                .clientId("a44fc26c-223d-4e58-b876-eddb7145b9c3")
-                .clientSecret("f04ec510e7d535fe951b4a7e8106d8d13b8b1f020f36da68a722b1cb492a30d1")
+                .clientId("dd2ccdab-4120-4885-be37-d24088de03c2")
+                .clientSecret("72befda1108f59c94e0c91bdcc53f4018e45f8b47e8ef1fa9aa769999a46483b")
+                .scope(USER, DATA)
                 .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
                 .build());
 
         //Step 3
-//        UserClient userClient = client.userClient();
-//        User clint = userClient.get(669096686);
-//        System.out.println(clint);
+        UserClient userClient = client.userClient();
+        User clint = userClient.get(669096686);
+        System.out.println(clint);
 
         DataSetClient dsClient = client.dataSetClient();
 
@@ -57,7 +59,8 @@ public class HandsOnWorkshop {
         System.out.println("Get:"+ds2);
 
         //Step 6 - Update DS
-        ds2.getSchema().setColumns(Lists.newArrayList(new Column(STRING, "1st Letters"),
+        ds2.getSchema().setColumns(Lists.newArrayList(
+                new Column(STRING, "1st Letters"),
                 new Column(STRING, "2nd Letters"),
                 new Column(STRING, "3rd Letters")));
         dsClient.update(ds2);

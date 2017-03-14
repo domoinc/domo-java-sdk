@@ -1,6 +1,7 @@
 package com.domo.sdk.groups;
 
 import com.domo.sdk.groups.model.Group;
+import com.domo.sdk.groups.model.UpdateGroupRequest;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.users.model.User;
@@ -43,17 +44,17 @@ public class GroupClient {
         return transport.getJson(url, new TypeToken<List<Group>>(){}.getType());
     }
 
-    public Group update(long userId, Group user) {
+    public Group update(long groupId, UpdateGroupRequest group) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
-                .addPathSegment(Long.toString(userId))
+                .addPathSegment(Long.toString(groupId))
                 .build();
 
-        return transport.putJson(url, user, Group.class);
+        return transport.putJson(url, group, Group.class);
     }
 
-    public void delete(long userId) {
+    public void delete(long groupId) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
-                .addPathSegment(Long.toString(userId))
+                .addPathSegment(Long.toString(groupId))
                 .build();
 
         transport.deleteJson(url);
@@ -75,7 +76,7 @@ public class GroupClient {
                 .addPathSegment("users")
                 .build();
 
-        return transport.getJson(url, new TypeToken<List<User>>(){}.getType());
+        return transport.getJson(url, new TypeToken<List<Long>>(){}.getType());
     }
 
     public void removeUserFromGroup(long groupId, long userId) {
