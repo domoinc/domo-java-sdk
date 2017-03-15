@@ -15,7 +15,6 @@ wrapper {
     gradleVersion = 3.3
 }
 
-group = 'com.domo'
 description = 'Official Domo Java SDK'
 
 github {
@@ -24,19 +23,24 @@ github {
 }
 
 allprojects {
+    group = 'com.domo'
+
     repositories { jcenter(); mavenCentral(); mavenLocal() }
     apply plugin: 'java'
-}
+    apply plugin: "ru.vyarus.java-lib"
 
-pom {
-    developers {
-        developer {
-            id 'domoinc'
-            name 'Domo'
-            email 'clint.checketts@domo.com'
+    pom {
+        developers {
+            developer {
+                id 'domoinc'
+                name 'Domo'
+                email 'clint.checketts@domo.com'
+            }
         }
     }
+
 }
+
 
 bintray {
     user = findProperty('bintrayUser')
