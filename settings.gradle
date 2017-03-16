@@ -1,0 +1,3 @@
+rootProject.name = 'domo-java-sdk'
+
+include ':domo-java-sdk-all'
