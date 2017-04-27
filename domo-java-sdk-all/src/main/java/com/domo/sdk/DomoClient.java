@@ -13,7 +13,7 @@ import com.domo.sdk.users.UserClient;
  * <p>Threadsafe client for interacting with Domo Public APIs. See <a href="https://developer.domo.com/docs/domo-apis/getting-started">
  *     API docs</a> for complete details.
  * </p>
- * <p><b>Use {@link Client#create(String, String)} to instantiate this client.</b></p>
+ * <p><b>Use {@link DomoClient#create(String, String)} to instantiate this client.</b></p>
  *
  * Usage:
  * <pre>
@@ -22,19 +22,19 @@ import com.domo.sdk.users.UserClient;
  * }
  * </pre>
  */
-public class Client {
+public class DomoClient {
     private final Config config;
 
     private final UserClient userClient;
     private final GroupClient groupClient;
     private final DataSetClient dataSetClient;
     private final PDPClient pdpClient;
-    private final StreamClient streamDataSetClient;
+    private final StreamClient streamClient;
 
     private final Transport transport;
     private final UrlBuilder urlBuilder;
 
-    private Client(Config config) {
+    private DomoClient( Config config) {
         this.config = config;
         this.urlBuilder = new UrlBuilder(config);
 
@@ -44,18 +44,18 @@ public class Client {
         this.groupClient = new GroupClient(urlBuilder, transport);
         this.dataSetClient = new DataSetClient(urlBuilder, transport);
         this.pdpClient = new PDPClient(urlBuilder, transport);
-        this.streamDataSetClient = new StreamClient(urlBuilder, transport);
+        this.streamClient = new StreamClient(urlBuilder, transport);
     }
 
-    public static Client create(String clientId, String secret) {
-        return new Client(Config.with().clientId(clientId)
+    public static DomoClient create( String clientId, String secret) {
+        return new DomoClient(Config.with().clientId(clientId)
                                         .clientSecret(secret)
                                         .build()
                 );
     }
 
-    public static Client create(Config config) {
-        return new Client(config);
+    public static DomoClient create( Config config) {
+        return new DomoClient(config);
     }
 
     public Config getConfig() {
@@ -78,8 +78,8 @@ public class Client {
         return pdpClient;
     }
 
-    public StreamClient streamDataSetClient() {
-        return streamDataSetClient;
+    public StreamClient streamClient() {
+        return streamClient;
     }
 
     public Transport getTransport() {

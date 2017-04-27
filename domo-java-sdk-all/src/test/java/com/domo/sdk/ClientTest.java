@@ -34,7 +34,7 @@ import static com.domo.sdk.request.Scope.USER;
 
 public class ClientTest {
 
-    private Client client;
+    private DomoClient client;
 
     @Before
     public void setup() {
@@ -47,7 +47,7 @@ public class ClientTest {
                 .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
                 .build();
 
-        client = Client.create(config);
+        client = DomoClient.create(config);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class ClientTest {
     @Test
     public void streamClient_smokeTest() throws IOException {
 
-        StreamClient sdsClient = client.streamDataSetClient();
+        StreamClient sdsClient = client.streamClient();
 
         //Build DataSet to populate the create stream request
         CreateDataSetRequest ds = new CreateDataSetRequest();

@@ -1,6 +1,6 @@
 package com.domo.sdk.users;
 
-import com.domo.sdk.Client;
+import com.domo.sdk.DomoClient;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.users.model.CreateUserRequest;
@@ -14,7 +14,7 @@ import java.util.List;
  * <p>Threadsafe client for performing User related requests. See <a href="https://developer.domo.com/docs/domo-apis/users">
  *     User API</a> docs for complete details.
  * </p>
- * <p><b>Use {@link Client#userClient()} to get a reference to an instance of this client.</b></p>
+ * <p><b>Use {@link DomoClient#userClient()} to get a reference to an instance of this client.</b></p>
  *
  * Usage:
  * <pre>

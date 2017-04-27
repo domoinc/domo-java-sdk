@@ -4,22 +4,15 @@ import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.model.Column;
 import com.domo.sdk.datasets.model.CreateDataSetRequest;
 import com.domo.sdk.datasets.model.DataSet;
-import com.domo.sdk.datasets.model.DataSetListResult;
 import com.domo.sdk.datasets.model.Schema;
 import com.domo.sdk.request.Config;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.User;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.assertj.core.util.Lists;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.List;
 
 import static com.domo.sdk.datasets.model.ColumnType.STRING;
 import static com.domo.sdk.request.Scope.DATA;
@@ -30,7 +23,7 @@ public class HandsOnWorkshop {
     @Test
     public void handsOnWorkShop() throws IOException {
         //Create client (step 1 & 2)
-        Client client = Client.create(Config.with()
+        DomoClient client = DomoClient.create(Config.with()
                 .scope(DATA)
                 .clientId("dd2ccdab-4120-4885-be37-d24088de03c2")
                 .clientSecret("72befda1108f59c94e0c91bdcc53f4018e45f8b47e8ef1fa9aa769999a46483b")
