@@ -4,16 +4,10 @@ import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.PDPClient;
 import com.domo.sdk.groups.GroupClient;
 import com.domo.sdk.request.Config;
-import com.domo.sdk.request.OAuthAuthenticator;
-import com.domo.sdk.request.OAuthInterceptor;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
-import com.domo.sdk.streams.StreamDataSetClient;
+import com.domo.sdk.streams.StreamClient;
 import com.domo.sdk.users.UserClient;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>Threadsafe client for interacting with Domo Public APIs. See <a href="https://developer.domo.com/docs/domo-apis/getting-started">
@@ -35,7 +29,7 @@ public class Client {
     private final GroupClient groupClient;
     private final DataSetClient dataSetClient;
     private final PDPClient pdpClient;
-    private final StreamDataSetClient streamDataSetClient;
+    private final StreamClient streamDataSetClient;
 
     private final Transport transport;
     private final UrlBuilder urlBuilder;
@@ -50,7 +44,7 @@ public class Client {
         this.groupClient = new GroupClient(urlBuilder, transport);
         this.dataSetClient = new DataSetClient(urlBuilder, transport);
         this.pdpClient = new PDPClient(urlBuilder, transport);
-        this.streamDataSetClient = new StreamDataSetClient(urlBuilder, transport);
+        this.streamDataSetClient = new StreamClient(urlBuilder, transport);
     }
 
     public static Client create(String clientId, String secret) {
@@ -84,7 +78,7 @@ public class Client {
         return pdpClient;
     }
 
-    public StreamDataSetClient streamDataSetClient() {
+    public StreamClient streamDataSetClient() {
         return streamDataSetClient;
     }
 
