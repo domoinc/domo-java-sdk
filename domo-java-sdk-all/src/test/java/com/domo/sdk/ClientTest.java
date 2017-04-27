@@ -10,11 +10,11 @@ import com.domo.sdk.groups.GroupClient;
 import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.groups.model.UpdateGroupRequest;
 import com.domo.sdk.request.Config;
-import com.domo.sdk.streams.StreamDataSetClient;
-import com.domo.sdk.streams.model.StreamDataSet;
-import com.domo.sdk.streams.model.StreamDataSetRequest;
-import com.domo.sdk.streams.model.StreamExecution;
-import com.domo.sdk.streams.model.StreamUploadMethod;
+import com.domo.sdk.streams.StreamClient;
+import com.domo.sdk.streams.model.Execution;
+import com.domo.sdk.streams.model.Stream;
+import com.domo.sdk.streams.model.StreamRequest;
+import com.domo.sdk.streams.model.UpdateMethod;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.CreateUserRequest;
 import com.domo.sdk.users.model.User;
@@ -38,34 +38,16 @@ public class ClientTest {
 
     @Before
     public void setup() {
-        Config rigConf = Config.with()
-                .clientId("d3090add-ebe5-4d6f-bfb0-2417a54d9ea2")
-                .clientSecret("50c40c6f25b26da321e1dae8aeb1e057f72673a34d0d7fba943f3d726df3f913")
-                .apiHost("localhost:19999")
-                .useHttps(false)
+        Config config = Config.with()
+                .clientId("MY_CLIENT_ID")
+                .clientSecret("MY_CLIENT_SECRET")
+                .apiHost("api.domo.com")
+                .useHttps(true)
                 .scope(USER, DATA)
                 .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
                 .build();
 
-        Config prodConf = Config.with()
-                .clientId("64e0e76e-4916-4cd3-97cb-c55573c236ba")
-                .clientSecret("41c7e09fea52a8cc70b51bb3450841228631ad2dd55952baa5d068110e0e8595")
-                .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
-                .scope(USER, DATA)
-                .build();
-
-        Config dev3Conf = Config.with()
-                .clientId("d2386c10-69a6-41c4-983d-f094d019e532")
-                .clientSecret("cf1b7671b456c06f0c68d54e16b72bf27033103205eb0c8d925905c5d8fde24e")
-                .apiHost("api.dev.domo.com")
-                .scope(USER, DATA)
-                .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
-                .build();
-
-
-        //Education.domo.com
-        client = Client.create(dev3Conf);
-//        client = Client.create("dd2ccdab-4120-4885-be37-d24088de03c2", "72befda1108f59c94e0c91bdcc53f4018e45f8b47e8ef1fa9aa769999a46483b");
+        client = Client.create(config);
     }
 
     @Test
@@ -113,21 +95,29 @@ public class ClientTest {
     public void userClient_smokeTest() throws IOException {
         UserClient userClient = client.userClient();
 
+        // Build a User request
+        CreateUserRequest request = new CreateUserRequest();
+        request.setName("Leonhard Euler");
+        request.setEmail("leonhard.euler@domo.com");
+        request.setRole("Privileged");
+        boolean sendInvite = true;
+
+        //Create a user
+        User user = userClient.create(sendInvite, request);
+
+        //Get a user
+        user = userClient.get(user.getId());
+
+        //List Users
         List<User> list = userClient.list(30, 0);
         System.out.println(list);
 
+        //Update a User
+        user.setName("Leo Euler");
+        user = userClient.update(user.getId(), user);
 
-//        User user = userClient.create(false, new CreateUserRequest("api.smoke.test@domo.com", "Admin", "API Smoke Test"));
-//        System.out.println("Created user:"+user);
-
-        User user2 = userClient.get(669096686L);
-        System.out.println("Get user:"+user2);
-
-        user2.setName("Clint Checketts");
-        User user3 = userClient.update(user2.getId(), user2);
-        System.out.println("Updated user:"+user3);
-
-//        userClient.delete(user.getId());
+        //Delete a User
+        userClient.delete(user.getId());
     }
 
     @Test
@@ -164,13 +154,16 @@ public class ClientTest {
 
         //Export to file
         File f = File.createTempFile("sample-export", ".csv");
-        dsClient.exportData(ds.getId(),true, f);
+        dsClient.exportDataToFile(ds.getId(),true, f);
         System.out.println("Wrote out file:"+f.getAbsolutePath());
 
         //Policies
 
         //List DS
-        List<DataSetListResult> list = dsClient.list(5,0);
+        String sortBy = "name";
+        int limit = 5;
+        int offset = 0;
+        List<DataSetListResult> list = dsClient.list(sortBy, limit, offset);
         System.out.println(list);
 
         //Delete DS
@@ -178,9 +171,9 @@ public class ClientTest {
     }
 
     @Test
-    public void streamDataSetClient_smokeTest() throws IOException {
+    public void streamClient_smokeTest() throws IOException {
 
-        StreamDataSetClient sdsClient = client.streamDataSetClient();
+        StreamClient sdsClient = client.streamDataSetClient();
 
         //Build DataSet to populate the create stream request
         CreateDataSetRequest ds = new CreateDataSetRequest();
@@ -189,39 +182,41 @@ public class ClientTest {
         ds.setSchema(new Schema(Lists.newArrayList(new Column(STRING, "Friend"), new Column(STRING, "Attending"))));
 
         //Create Stream
-        StreamDataSetRequest sdsRequest = new StreamDataSetRequest();
-        sdsRequest.setDataset(ds);
-        sdsRequest.setUpdateMethod(StreamUploadMethod.APPEND);
-        StreamDataSet sds = sdsClient.createStreamDataset(sdsRequest);
+        StreamRequest sdsRequest = new StreamRequest();
+        sdsRequest.setDataSet(ds);
+        sdsRequest.setUpdateMethod(UpdateMethod.APPEND);
+        Stream sds = sdsClient.create(sdsRequest);
         System.out.println("Created:" + sds);
 
         //Get Stream
-        StreamDataSet retrievedSds = sdsClient.getStreamDataset(sds.getId());
+        Stream retrievedSds = sdsClient.get(sds.getId());
         System.out.println("Retrieved:" + retrievedSds);
 
         //List Streams
-        List<StreamDataSet> listedSds = sdsClient.listStreamDatasets();
+        int limit = 500;
+        int offset = 0;
+        List<Stream> listedSds = sdsClient.list(limit, offset);
         System.out.println("Listed Streams: " + listedSds);
 
         //Search Streams
-        List<StreamDataSet> searchedSds = sdsClient.searchStreamDatasets("dataSource.name:" + ds.getName());
+        List<Stream> searchedSds = sdsClient.search("dataSource.name:" + ds.getName());
         System.out.println("Searched Streams: " + searchedSds);
 
-        //Update Stream
-        sdsRequest.setUpdateMethod(StreamUploadMethod.REPLACE); //Only the stream metadata fields can be updated, not the dataSet metadata
-        StreamDataSet updatedSds = sdsClient.updateStreamDataset(sds.getId(), sdsRequest);
+        //Update Stream to REPLACE
+        sdsRequest.setUpdateMethod(UpdateMethod.REPLACE); //Only the stream metadata fields can be updated, not the dataSet metadata
+        Stream updatedSds = sdsClient.update(sds.getId(), sdsRequest);
         System.out.println("Updated Stream: " + updatedSds);
 
         //Create Execution
-        StreamExecution execution = sdsClient.createStreamExecution(sds.getId());
+        Execution execution = sdsClient.createExecution(sds.getId());
         System.out.println("Created Execution: " + execution);
 
         //Get Execution
-        StreamExecution retrievedExecution = sdsClient.getStreamExecution(sds.getId(), execution.getId());
+        Execution retrievedExecution = sdsClient.getExecution(sds.getId(), execution.getId());
         System.out.println("Retrieved Execution: " + retrievedExecution);
 
         //List Executions
-        List<StreamExecution> listedExecutions = sdsClient.listStreamExecutions(sds.getId(), 50, 0);
+        List<Execution> listedExecutions = sdsClient.listExecutions(sds.getId(), 50, 0);
         System.out.println("Listed Executions: " + listedExecutions);
 
         //Upload Parts
@@ -230,16 +225,12 @@ public class ClientTest {
         sdsClient.uploadDataPart(sds.getId(), execution.getId(), partNum, csvInput);
 
         //Commit Execution
-        StreamExecution committedExecution = sdsClient.commitStreamExecution(sds.getId(), execution.getId());
+        Execution committedExecution = sdsClient.commitExecution(sds.getId(), execution.getId());
         System.out.println("Committed Execution: " + committedExecution);
 
         //Delete Stream
-        sdsClient.deleteStreamDataset(sds.getId());
+        sdsClient.delete(sds.getId());
         System.out.println("Deleting Dataset: " + sds);
-
-        //Verify Stream Deletion
-        List<StreamDataSet> verifiedDeletion = sdsClient.listStreamDatasets();
-        System.out.println("Verified Stream Deletion: " + verifiedDeletion);
     }
 
     private static String convertStreamToString(java.io.InputStream is) {

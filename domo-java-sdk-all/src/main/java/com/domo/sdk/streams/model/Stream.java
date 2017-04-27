@@ -1,20 +1,21 @@
 package com.domo.sdk.streams.model;
 
+import com.domo.sdk.datasets.model.DataSet;
+
 /**
- * Created by bobbyswingler on 3/8/17.
+ * Created by bobbyswingler on 3/10/17.
  */
-public class StreamExecution
-{
+public class Stream {
+
     private long id;
-    private String startedAt;
-    private String currentState;
+    private DataSet dataSet;
+    private String updateMethod;
     private String createdAt;
     private String modifiedAt;
 
-    public StreamExecution(){
+    public Stream(){
         this.id = 0;
-        this.startedAt = "";
-        this.currentState = "";
+        this.dataSet = new DataSet();
         this.createdAt = "";
         this.modifiedAt = "";
     }
@@ -27,20 +28,20 @@ public class StreamExecution
         this.id = id;
     }
 
-    public String getStartedAt() {
-        return startedAt;
+    public DataSet getDataset() {
+        return dataSet;
     }
 
-    public void setStartedAt( String startedAt ) {
-        this.startedAt = startedAt;
+    public void setDataset( DataSet dataset ) {
+        this.dataSet = dataset;
     }
 
-    public String getCurrentState() {
-        return currentState;
+    public String getUpdateMethod() {
+        return updateMethod;
     }
 
-    public void setCurrentState( String currentState ) {
-        this.currentState = currentState;
+    public void setUpdateMethod( String updateMethod ) {
+        this.updateMethod = updateMethod;
     }
 
     public String getCreatedAt() {
@@ -68,15 +69,15 @@ public class StreamExecution
             return false;
         }
 
-        StreamExecution that = (StreamExecution) o;
+        Stream that = (Stream) o;
 
         if (getId() != that.getId()) {
             return false;
         }
-        if (getStartedAt() != null ? !getStartedAt().equals(that.getStartedAt()) : that.getStartedAt() != null) {
+        if (getDataset() != null ? !getDataset().equals(that.getDataset()) : that.getDataset() != null) {
             return false;
         }
-        if (getCurrentState() != null ? !getCurrentState().equals(that.getCurrentState()) : that.getCurrentState() != null) {
+        if (getUpdateMethod() != null ? !getUpdateMethod().equals(that.getUpdateMethod()) : that.getUpdateMethod() != null) {
             return false;
         }
         if (getCreatedAt() != null ? !getCreatedAt().equals(that.getCreatedAt()) : that.getCreatedAt() != null) {
@@ -88,8 +89,8 @@ public class StreamExecution
     @Override
     public int hashCode() {
         int result = (int) ( getId() ^ ( getId() >>> 32 ) );
-        result = 31 * result + ( getStartedAt() != null ? getStartedAt().hashCode() : 0 );
-        result = 31 * result + ( getCurrentState() != null ? getCurrentState().hashCode() : 0 );
+        result = 31 * result + ( getDataset() != null ? getDataset().hashCode() : 0 );
+        result = 31 * result + ( getUpdateMethod() != null ? getUpdateMethod().hashCode() : 0 );
         result = 31 * result + ( getCreatedAt() != null ? getCreatedAt().hashCode() : 0 );
         result = 31 * result + ( getModifiedAt() != null ? getModifiedAt().hashCode() : 0 );
         return result;
@@ -97,10 +98,10 @@ public class StreamExecution
 
     @Override
     public String toString() {
-        return "StreamExecution{" +
-                "id=" + id +
-                ", startedAt='" + startedAt + '\'' +
-                ", currentState='" + currentState + '\'' +
+        return "StreamDataSet{" +
+                "id='" + id + '\'' +
+                ", dataset=" + dataSet.toString() +
+                ", updateMethod='" + updateMethod + '\'' +
                 ", createdAt='" + createdAt + '\'' +
                 ", modifiedAt='" + modifiedAt + '\'' +
                 '}';
