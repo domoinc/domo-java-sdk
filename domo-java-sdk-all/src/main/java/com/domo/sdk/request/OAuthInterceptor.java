@@ -94,9 +94,7 @@ public class OAuthInterceptor implements Interceptor {
                 .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope="+scopes))
                 .build();
 
-        Response response;
-        try {
-            response = config.okHttpClient().newCall(request).execute();
+        try (Response response = config.okHttpClient().newCall(request).execute()) {
 
             OAuthResponse oauth = gson.fromJson(response.body().charStream(), OAuthResponse.class);
             accessToken.set(oauth.access_token);
