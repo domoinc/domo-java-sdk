@@ -60,7 +60,7 @@ Classic Jar Import:
 - Clone this repository
 - Using a Bash Terminal, navigate to the cloned repository folder
 - Create the Jar files via the Bash command `./gradlew publishToMavenLocal`
-- The Jars will be located in `build/libs/`
+- The Jars will be located in `domo-java-sdk-all/build/libs/`
 - Copy the Jars to your project folder, and add them to your build path
 
 ### Usage
