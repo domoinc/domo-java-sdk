@@ -35,8 +35,7 @@ public class Transport {
                 .url(url)
                 .build();
 
-        try {
-            Response response = httpClient.newCall(request).execute();
+        try(Response response = httpClient.newCall(request).execute()) {
             if(response.code() > 399) {
                 throw new RequestException("Error making request url:"+url.toString()+" reponseBody:"+response.body().source().readUtf8());
             }
@@ -66,8 +65,7 @@ public class Transport {
                 .method(method, requestBody)
                 .build();
 
-        try {
-            Response response = httpClient.newCall(request).execute();
+        try (Response response = httpClient.newCall(request).execute()) {
             if(response.isSuccessful()) {
                 return gson.fromJson(response.body().charStream(), clazz);
             } else {
@@ -85,8 +83,7 @@ public class Transport {
                 .delete()
                 .build();
 
-        try {
-            Response response = httpClient.newCall(request).execute();
+        try (Response response = httpClient.newCall(request).execute()) {
         } catch (IOException e) {
             throw new RequestException("Error deleting, url:"+url.toString(), e);
         }
@@ -98,8 +95,7 @@ public class Transport {
                 .url(url)
                 .build();
 
-        try {
-            Response response = httpClient.newCall(request).execute();
+        try (Response response = httpClient.newCall(request).execute()) {
             if(!response.isSuccessful()) {
                 throw new RequestException("Error making request url:"+url.toString()+" responseBody:"+response.body().source().readUtf8());
             }
@@ -126,8 +122,7 @@ public class Transport {
                 .put(requestBody)
                 .build();
 
-        try {
-            Response response = httpClient.newCall(request).execute();
+        try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new RequestException("Error uploading csv. url:"+url.toString()+" responseBody:"+response.body().source().readUtf8());
             }
