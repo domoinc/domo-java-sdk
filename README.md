@@ -40,12 +40,21 @@
 
 The SDK can be added to your project in three ways:
 
+It is currently hosted via bintray and JCenter (It will be in Maven central eventually):
+```groovy
+repositories {
+    maven {
+        url  "http://dl.bintray.com/domoinc/domo-java-sdk" 
+    }
+}
+```
+
 Maven:
 
 ```xml
 <dependency>
   <groupId>com.domo</groupId>
-  <artifactId>domo-java-sdk</artifactId>
+  <artifactId>domo-java-sdk-all</artifactId>
   <version>0.1.0</version>
 </dependency>
 ```
@@ -53,7 +62,7 @@ Maven:
 Gradle:
 
 ```groovy
-compile 'com.domo:domo-java-sdk:0.1.0'
+compile 'com.domo:domo-java-sdk-all:0.1.0'
 ```
 
 Classic Jar Import:
