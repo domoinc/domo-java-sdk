@@ -95,7 +95,8 @@ public class Transport {
                 .url(url)
                 .build();
 
-        try (Response response = httpClient.newCall(request).execute()) {
+        try {
+            Response response = httpClient.newCall(request).execute();
             if(!response.isSuccessful()) {
                 throw new RequestException("Error making request url:"+url.toString()+" responseBody:"+response.body().source().readUtf8());
             }

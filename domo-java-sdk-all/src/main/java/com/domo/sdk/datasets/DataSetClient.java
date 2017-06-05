@@ -139,7 +139,7 @@ public class DataSetClient {
      * Export CSV data as an InputStream
      * @param id the DataSet id
      * @param includeHeader whether or not the CSV header row should be included
-     * @return a Java InputStream for data retrieval
+     * @return a Java InputStream for data retrieval, be certain to close the input stream
      */
     public InputStream exportData(String id, boolean includeHeader) {
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
