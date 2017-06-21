@@ -173,7 +173,7 @@ public class ClientTest {
     @Test
     public void streamClient_smokeTest() throws IOException {
 
-        StreamClient sdsClient = client.streamClient();
+        StreamClient streamClient = client.streamClient();
 
         //Build DataSet to populate the create stream request
         CreateDataSetRequest ds = new CreateDataSetRequest();
@@ -185,51 +185,51 @@ public class ClientTest {
         StreamRequest sdsRequest = new StreamRequest();
         sdsRequest.setDataSet(ds);
         sdsRequest.setUpdateMethod(UpdateMethod.APPEND);
-        Stream sds = sdsClient.create(sdsRequest);
+        Stream sds = streamClient.create(sdsRequest);
         System.out.println("Created:" + sds);
 
         //Get Stream
-        Stream retrievedSds = sdsClient.get(sds.getId());
+        Stream retrievedSds = streamClient.get(sds.getId());
         System.out.println("Retrieved:" + retrievedSds);
 
         //List Streams
         int limit = 500;
         int offset = 0;
-        List<Stream> listedSds = sdsClient.list(limit, offset);
+        List<Stream> listedSds = streamClient.list(limit, offset);
         System.out.println("Listed Streams: " + listedSds);
 
         //Search Streams
-        List<Stream> searchedSds = sdsClient.search("dataSource.name:" + ds.getName());
+        List<Stream> searchedSds = streamClient.search("dataSource.name:" + ds.getName());
         System.out.println("Searched Streams: " + searchedSds);
 
         //Update Stream to REPLACE
         sdsRequest.setUpdateMethod(UpdateMethod.REPLACE); //Only the stream metadata fields can be updated, not the dataSet metadata
-        Stream updatedSds = sdsClient.update(sds.getId(), sdsRequest);
+        Stream updatedSds = streamClient.update(sds.getId(), sdsRequest);
         System.out.println("Updated Stream: " + updatedSds);
 
         //Create Execution
-        Execution execution = sdsClient.createExecution(sds.getId());
+        Execution execution = streamClient.createExecution(sds.getId());
         System.out.println("Created Execution: " + execution);
 
         //Get Execution
-        Execution retrievedExecution = sdsClient.getExecution(sds.getId(), execution.getId());
+        Execution retrievedExecution = streamClient.getExecution(sds.getId(), execution.getId());
         System.out.println("Retrieved Execution: " + retrievedExecution);
 
         //List Executions
-        List<Execution> listedExecutions = sdsClient.listExecutions(sds.getId(), 50, 0);
+        List<Execution> listedExecutions = streamClient.listExecutions(sds.getId(), 50, 0);
         System.out.println("Listed Executions: " + listedExecutions);
 
         //Upload Parts
         String csvInput = "\"Pythagoras\",\"FALSE\"\n\"Alan Turing\",\"TRUE\"\n\"George Boole\",\"TRUE\"";
         int partNum = 1;
-        sdsClient.uploadDataPart(sds.getId(), execution.getId(), partNum, csvInput);
+        streamClient.uploadDataPart(sds.getId(), execution.getId(), partNum, csvInput);
 
         //Commit Execution
-        Execution committedExecution = sdsClient.commitExecution(sds.getId(), execution.getId());
+        Execution committedExecution = streamClient.commitExecution(sds.getId(), execution.getId());
         System.out.println("Committed Execution: " + committedExecution);
 
         //Delete Stream
-        sdsClient.delete(sds.getId());
+        streamClient.delete(sds.getId());
         System.out.println("Deleting Dataset: " + sds);
     }
 

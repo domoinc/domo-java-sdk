@@ -4,6 +4,7 @@ import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.PDPClient;
 import com.domo.sdk.groups.GroupClient;
 import com.domo.sdk.request.Config;
+import com.domo.sdk.request.Gzipper;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.streams.StreamClient;
@@ -33,6 +34,7 @@ public class DomoClient {
 
     private final Transport transport;
     private final UrlBuilder urlBuilder;
+    private final Gzipper gzipBuilder;
 
     private DomoClient( Config config) {
         this.config = config;
@@ -45,6 +47,8 @@ public class DomoClient {
         this.dataSetClient = new DataSetClient(urlBuilder, transport);
         this.pdpClient = new PDPClient(urlBuilder, transport);
         this.streamClient = new StreamClient(urlBuilder, transport);
+
+        streamClient.abortCurrentExecution();
     }
 
     public static DomoClient create( String clientId, String secret) {

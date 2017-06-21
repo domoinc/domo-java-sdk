@@ -7,14 +7,29 @@ import com.domo.sdk.streams.model.Stream;
 import com.domo.sdk.streams.model.StreamRequest;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.zip.GZIPOutputStream;
 
 public class StreamClient {
     private final UrlBuilder urlBuilder;
     private final Transport transport;
-    private static final String URL_BASE ="v1/streams";
+    private static final String URL_BASE = "v1/streams";
+    private static final Logger logger = LoggerFactory.getLogger(StreamClient.class);
+
 
 
     /**
@@ -267,5 +282,61 @@ public class StreamClient {
                 .build();
 
         transport.putJson(url, "", String.class);
+    }
+
+
+    /**
+     * Asynchronously compress and upload csv data to a Domo DataSet via Stream Execution
+     * @param streamId the target DataSet's Stream id
+     * @param csvFiles a list of csv files, preferrably compressed
+     */
+    public void compressAndUploadPartsAsync( long streamId, List<File> csvFiles){
+
+        //Compress the incoming csv files in a temp folder
+        File tempFolder = new File(csvFiles.get(0).getParent() + "/temp/");
+        if (!tempFolder.exists()){
+            tempFolder.mkdir();
+        }
+        List<File> compressedCsvFiles = toGzipFilesUTF8(csvFiles, tempFolder.getPath() + "/");
+
+        // Create an Execution on the given Stream
+        Execution execution = createExecution(streamId);
+
+        // Create the asynchronous executor service and task collection
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        List<Callable<Object>> uploadTasks = Collections.synchronizedList(new ArrayList<>());
+
+        // For each row group, create a runnable upload task
+        long partNum = 1;
+        for (File compressedCsvFile : compressedCsvFiles){
+            long myPartNum = partNum;
+            Runnable partUpload = () -> uploadDataPart(streamId, execution.getId(), myPartNum, compressedCsvFile); // "uploadDataPart()" accepts csv strings, csv files, and compressed csv files
+            uploadTasks.add(Executors.callable(partUpload));
+            partNum++;
+        }
+
+        // Asynchronously execute all uploading tasks
+        try {
+            long start = System.currentTimeMillis();
+            executorService.invokeAll(uploadTasks);
+            long duration = System.currentTimeMillis() - start;
+            logger.info("\n\n******* Parallel upload time: " + duration + "ms");
+        }
+        catch (Exception e){
+            logger.error("Error uploading all data parts", e);
+        }
+
+        // Commit the Stream Execution to finalize the multi-part upload
+        commitExecution(streamId, execution.getId());
+
+        // Delete the temp folder
+        if (tempFolder.exists()) {
+            try {
+                Files.delete(tempFolder.toPath());
+            }
+            catch (Exception e){
+                logger.error("Error deleting the compressed csv temp folder");
+            }
+        }
     }
 }
