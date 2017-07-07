@@ -2,6 +2,8 @@ package com.domo.sdk.request;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Config {
+    private static final Logger LOG = LoggerFactory.getLogger(Config.class);
     private final String clientId;
     private final String secret;
     private final List<Scope> scopes;
@@ -27,7 +30,7 @@ public class Config {
         this.clientId = clientId;
         this.secret = secret;
         this.scopes = Collections.unmodifiableList(scopes);
-        this.apiHost = apiHost;
+        this.apiHost = stripPrefix(apiHost);
         this.useHttps = useHttps;
 
         if(httpLoggingLevel == null) {
@@ -48,6 +51,20 @@ public class Config {
             this.httpClient = httpClient;
         }
 
+    }
+
+    // Visible for testing.
+    String stripPrefix(String apiHost) {
+        String httpPrefix = "http://";
+        String httpsPrefix = "https://";
+        if(apiHost.toLowerCase().startsWith(httpPrefix)) {
+            LOG.warn("Ignoring http hpiHost scheme, set 'useHttps' to false for http");
+            return apiHost.substring(httpPrefix.length());
+        } else if(apiHost.toLowerCase().startsWith(httpsPrefix)) {
+            return apiHost.substring(httpsPrefix.length());
+        } else {
+            return apiHost;
+        }
     }
 
     public String getClientId() {
