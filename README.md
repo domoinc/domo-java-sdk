@@ -56,14 +56,14 @@ Maven:
 <dependency>
   <groupId>com.domo</groupId>
   <artifactId>domo-java-sdk-all</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-compile 'com.domo:domo-java-sdk-all:0.1.0'
+compile 'com.domo:domo-java-sdk-all:0.2.0'
 ```
 
 Classic Jar Import:
