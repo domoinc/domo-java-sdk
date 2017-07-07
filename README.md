@@ -3,6 +3,7 @@
 </div>
 
 # Java - Domo API SDK
+[![Download](https://api.bintray.com/packages/domoinc/domo-java-sdk/domo-java-sdk/images/download.svg) ](https://bintray.com/domoinc/domo-java-sdk/domo-java-sdk/_latestVersion)
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://www.opensource.org/licenses/MIT)
 [![Build Status](http://img.shields.io/travis/domoinc/domo-java-sdk.svg?style=flat&branch=master)](https://travis-ci.org/domoinc/domo-java-sdk)
 [![Coverage Status](https://img.shields.io/coveralls/domoinc/domo-java-sdk.svg?style=flat)](https://coveralls.io/r/domoinc/domo-java-sdk?branch=master)
