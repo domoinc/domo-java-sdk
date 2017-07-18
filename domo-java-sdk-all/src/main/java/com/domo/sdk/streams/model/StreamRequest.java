@@ -9,12 +9,10 @@ public class StreamRequest {
 
     private CreateDataSetRequest dataSet;
     private String updateMethod;
-    private String keyColumnName;
 
     public StreamRequest(){
         this.dataSet = new CreateDataSetRequest();
         this.updateMethod = UpdateMethod.APPEND;
-        this.keyColumnName = "";
     }
 
     public CreateDataSetRequest getDataSet() {
@@ -31,13 +29,5 @@ public class StreamRequest {
 
     public void setUpdateMethod( String updateMethod ) {
         this.updateMethod = updateMethod;
-    }
-
-    public String getKeyColumnName() {
-        return keyColumnName;
-    }
-
-    public void setKeyColumnName( String keyColumnName ) {
-        this.keyColumnName = keyColumnName;
     }
 }
