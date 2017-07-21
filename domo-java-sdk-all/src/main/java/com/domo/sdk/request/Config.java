@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Config {
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
@@ -40,17 +41,9 @@ public class Config {
         }
 
         if(httpClient == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new Slf4jLoggingInterceptor());
-            logging.setLevel(this.httpLoggingLevel);
-            this.httpClient = new OkHttpClient.Builder()
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .addInterceptor(new OAuthInterceptor(new UrlBuilder(this), this))
-                    .addInterceptor(logging)
-                    .build();
-        } else {
-            this.httpClient = httpClient;
+            throw new IllegalStateException("HttpClient is required");
         }
-
+        this.httpClient = httpClient;
     }
 
     // Visible for testing.
@@ -103,8 +96,19 @@ public class Config {
         private List<Scope> scopes = new ArrayList<>();
         private OkHttpClient httpClient;
         private HttpLoggingInterceptor.Level httpLoggingLevel;
+        private AtomicReference<Config> configRef = new AtomicReference<>();
 
         public Builder() {
+        }
+
+        public OkHttpClient.Builder defaultHttpClientBuilder() {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new Slf4jLoggingInterceptor());
+            logging.setLevel(this.httpLoggingLevel);
+
+            return new OkHttpClient.Builder()
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .addInterceptor(new OAuthInterceptor(new UrlBuilder(configRef), configRef))
+                    .addInterceptor(logging);
         }
 
         public Builder clientId(String clientId) {
@@ -144,13 +148,20 @@ public class Config {
                 throw new ConfigException("At lease one scope is required");
             }
 
-            return new Config(this.clientId,
+            OkHttpClient client = this.httpClient;
+            if(client == null) {
+                client = defaultHttpClientBuilder().build();
+            }
+
+            Config conf = new Config(this.clientId,
                     this.secret,
                     this.apiHost,
                     this.useHttps,
                     this.scopes,
-                    this.httpClient,
+                    client,
                     this.httpLoggingLevel);
+            configRef.set(conf);
+            return conf;
         }
 
         private void require(String name, String value){

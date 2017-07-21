@@ -24,11 +24,15 @@ public class OAuthInterceptor implements Interceptor {
     private final Gson gson = new Gson();
 
     private final UrlBuilder urlBuilder;
-    private final Config config;
+    private final AtomicReference<Config> config;
 
     public OAuthInterceptor(UrlBuilder urlBuilder, Config config) {
+        this(urlBuilder, new AtomicReference<>(config));
+    }
+
+    public OAuthInterceptor(UrlBuilder urlBuilder, AtomicReference<Config> configRef) {
         this.urlBuilder = urlBuilder;
-        this.config = config;
+        this.config = configRef;
     }
 
     @Override
@@ -83,18 +87,18 @@ public class OAuthInterceptor implements Interceptor {
         HttpUrl url = urlBuilder.fromPathSegments("oauth/token")
                 .build();
 
-        String scopes = config.getScopes()
+        String scopes = config.get().getScopes()
                 .stream().map(s -> s.name().toLowerCase())
                 .collect(Collectors.joining(" "));
 
         Request request = new Request.Builder()
-                .header("Authorization", Credentials.basic(config.getClientId(), config.getSecret()))
+                .header("Authorization", Credentials.basic(config.get().getClientId(), config.get().getSecret()))
                 .header("Accept", "application/json")
                 .url(url)
                 .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded"),"grant_type=client_credentials&scope="+scopes))
                 .build();
 
-        try (Response response = config.okHttpClient().newCall(request).execute()) {
+        try (Response response = config.get().okHttpClient().newCall(request).execute()) {
 
             OAuthResponse oauth = gson.fromJson(response.body().charStream(), OAuthResponse.class);
             accessToken.set(oauth.access_token);
