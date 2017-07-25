@@ -40,7 +40,9 @@ publishing {
                     password nexusPassword
                 }
             }
-            url nexusReleaseUrl
+            if (project.hasProperty('nexusReleaseUrl')) {
+                url nexusReleaseUrl
+            }
         }
     }
 }
