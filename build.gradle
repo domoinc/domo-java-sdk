@@ -28,6 +28,7 @@ allprojects {
     repositories { jcenter(); mavenCentral(); mavenLocal() }
     apply plugin: 'java'
     apply plugin: "ru.vyarus.java-lib"
+    apply plugin: 'idea'
 
     pom {
         developers {
@@ -38,9 +39,7 @@ allprojects {
             }
         }
     }
-
 }
-
 
 bintray {
     user = findProperty('bintrayUser')
