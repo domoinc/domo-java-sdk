@@ -6,21 +6,22 @@ import com.domo.sdk.pages.model.PageCollection;
 import com.domo.sdk.pages.model.PageSummary;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
+import com.domo.sdk.users.model.User;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.HttpUrl;
 
 import java.util.List;
 
 /**
- * <p>Threadsafe client for performing User related requests. See <a href="https://developer.domo.com/docs/domo-apis/users">
- *     User API</a> docs for complete details.
+ * <p>Threadsafe client for performing Page related requests. See <a href="https://developer.domo.com/docs/domo-apis/pages">
+ *     Page API</a> docs for complete details.
  * </p>
- * <p><b>Use {@link DomoClient#userClient()} to get a reference to an instance of this client.</b></p>
+ * <p><b>Use {@link DomoClient#pageClient()} to get a reference to an instance of this client.</b></p>
  *
  * Usage:
  * <pre>
  * {@code Client client = Client.create("<your app id>","<your app secret>");
- *  client.userClient().list(10,0);
+ *  client.pageClient().list(10,0);
  * }
  * </pre>
  */
@@ -43,10 +44,15 @@ public class PageClient {
     /**
      *  See <a href="https://developer.domo.com/docs/domo-apis/pages#API%20-%20List%20Pages">List Pages</a> Api Docs
      *
-     * @return List of Page Summaries
+     * @param limit number of users to fetch
+     * @param offset page offset of user result
+     * @return List of <code>PageSummary</code>s
      */
-    public List<PageSummary> list() {
-        HttpUrl url = urlBuilder.fromPathSegments(PAGES_URL).build();
+    public List<PageSummary> list(int limit, int offset) {
+        HttpUrl url = urlBuilder.fromPathSegments(PAGES_URL)
+                .addQueryParameter("limit", Integer.toString(limit))
+                .addQueryParameter("offset", Integer.toString(offset))
+                .build();
 
         return transport.getJson(url, new TypeToken<List<PageSummary>>(){}.getType());
     }
