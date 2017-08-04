@@ -1,5 +1,6 @@
 package com.domo.sdk.request;
 
+import com.domo.sdk.pages.model.Page;
 import com.google.gson.Gson;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -49,6 +50,10 @@ public class Transport {
         return methodJson("POST", url, body, clazz);
     }
 
+    public void putJson(HttpUrl url, Object body) {
+        putJson(url, body, null);
+    }
+
     public <T> T putJson(HttpUrl url, Object body, Class<T> clazz) { return methodJson("PUT", url, body, clazz); }
 
     public <T> T patchJson(HttpUrl url, Object body, Class<T> clazz) {
@@ -67,7 +72,11 @@ public class Transport {
 
         try (Response response = httpClient.newCall(request).execute()) {
             if(response.isSuccessful()) {
-                return gson.fromJson(response.body().charStream(), clazz);
+                if (clazz != null) {
+                    return gson.fromJson(response.body().charStream(), clazz);
+                } else {
+                    return null;
+                }
             } else {
                 ErrorResponse err =  gson.fromJson(response.body().charStream(), ErrorResponse.class);
                 throw new RequestException(err);

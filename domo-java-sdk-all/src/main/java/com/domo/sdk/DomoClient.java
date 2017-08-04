@@ -3,6 +3,7 @@ package com.domo.sdk;
 import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.PDPClient;
 import com.domo.sdk.groups.GroupClient;
+import com.domo.sdk.pages.PageClient;
 import com.domo.sdk.request.Config;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
@@ -28,6 +29,7 @@ public class DomoClient {
     private final UserClient userClient;
     private final GroupClient groupClient;
     private final DataSetClient dataSetClient;
+    private final PageClient pageClient;
     private final PDPClient pdpClient;
     private final StreamClient streamClient;
 
@@ -43,6 +45,7 @@ public class DomoClient {
         this.userClient = new UserClient(urlBuilder, transport);
         this.groupClient = new GroupClient(urlBuilder, transport);
         this.dataSetClient = new DataSetClient(urlBuilder, transport);
+        this.pageClient = new PageClient(urlBuilder, transport);
         this.pdpClient = new PDPClient(urlBuilder, transport);
         this.streamClient = new StreamClient(urlBuilder, transport);
     }
@@ -72,6 +75,10 @@ public class DomoClient {
 
     public DataSetClient dataSetClient() {
         return dataSetClient;
+    }
+
+    public PageClient pageClient() {
+        return pageClient;
     }
 
     public PDPClient pdpClient() {

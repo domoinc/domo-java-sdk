@@ -43,7 +43,7 @@ public class UserClient {
     /**
      * See <a href="https://developer.domo.com/docs/domo-apis/users#API%20-%20Create%20a%20User">Create User</a> Api Docs
      *
-     * @param sendInvite should invitaion email be sent to newly invited user
+     * @param sendInvite should invitation email be sent to newly invited user
      * @param newUser user to create
      * @return User that was created, including user ID
      */
