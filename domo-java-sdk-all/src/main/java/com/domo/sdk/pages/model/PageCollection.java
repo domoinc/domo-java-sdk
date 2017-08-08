@@ -39,4 +39,26 @@ public class PageCollection {
     public void setCardIds(List<Long> cardIds) {
         this.cardIds = cardIds;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PageCollection)) return false;
+
+        PageCollection that = (PageCollection) o;
+
+        if (id != that.id) return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return cardIds != null ? cardIds.equals(that.cardIds) : that.cardIds == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (cardIds != null ? cardIds.hashCode() : 0);
+        return result;
+    }
 }

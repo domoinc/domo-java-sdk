@@ -116,4 +116,35 @@ public class Page {
             return toBuild;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Page)) return false;
+
+        Page page = (Page) o;
+
+        if (id != page.id) return false;
+        if (parentId != page.parentId) return false;
+        if (ownerId != page.ownerId) return false;
+        if (!name.equals(page.name)) return false;
+        if (locked != null ? !locked.equals(page.locked) : page.locked != null) return false;
+        if (collectionIds != null ? !collectionIds.equals(page.collectionIds) : page.collectionIds != null)
+            return false;
+        if (cardIds != null ? !cardIds.equals(page.cardIds) : page.cardIds != null) return false;
+        return pageVisibility != null ? pageVisibility.equals(page.pageVisibility) : page.pageVisibility == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (int) (parentId ^ (parentId >>> 32));
+        result = 31 * result + (int) (ownerId ^ (ownerId >>> 32));
+        result = 31 * result + (locked != null ? locked.hashCode() : 0);
+        result = 31 * result + (collectionIds != null ? collectionIds.hashCode() : 0);
+        result = 31 * result + (cardIds != null ? cardIds.hashCode() : 0);
+        result = 31 * result + (pageVisibility != null ? pageVisibility.hashCode() : 0);
+        return result;
+    }
 }

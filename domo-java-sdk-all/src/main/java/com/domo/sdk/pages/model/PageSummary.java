@@ -30,4 +30,24 @@ public class PageSummary {
     public void setChildren(List<PageSummary> children) {
         this.children = children;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PageSummary)) return false;
+
+        PageSummary that = (PageSummary) o;
+
+        if (id != that.id) return false;
+        if (!name.equals(that.name)) return false;
+        return children.equals(that.children);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + children.hashCode();
+        return result;
+    }
 }

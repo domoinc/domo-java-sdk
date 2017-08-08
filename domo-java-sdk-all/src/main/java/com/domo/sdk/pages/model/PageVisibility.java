@@ -36,4 +36,22 @@ public class PageVisibility {
     public void setGroupIds(List<Long> groupIds) {
         this.groupIds = groupIds;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PageVisibility)) return false;
+
+        PageVisibility that = (PageVisibility) o;
+
+        if (userIds != null ? !userIds.equals(that.userIds) : that.userIds != null) return false;
+        return groupIds != null ? groupIds.equals(that.groupIds) : that.groupIds == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userIds != null ? userIds.hashCode() : 0;
+        result = 31 * result + (groupIds != null ? groupIds.hashCode() : 0);
+        return result;
+    }
 }
