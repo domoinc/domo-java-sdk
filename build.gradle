@@ -23,6 +23,9 @@ github {
 }
 
 allprojects {
+    if(project.hasProperty("buildNumber")) {
+        project.version = project.version + "-" + project.buildNumber
+    }
     group = 'com.domo'
 
     repositories { jcenter(); mavenCentral(); mavenLocal() }
