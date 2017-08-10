@@ -10,7 +10,7 @@ public class Page {
     private Boolean locked;
     private List<Long> collectionIds;
     private List<Long> cardIds;
-    private PageVisibility pageVisibility;
+    private PageVisibility visibility;
 
     public long getId() {
         return id;
@@ -68,12 +68,12 @@ public class Page {
         this.cardIds = cardIds;
     }
 
-    public PageVisibility getPageVisibility() {
-        return pageVisibility;
+    public PageVisibility getVisibility() {
+        return visibility;
     }
 
-    public void setPageVisibility(PageVisibility pageVisibility) {
-        this.pageVisibility = pageVisibility;
+    public void setVisibility(PageVisibility visibility) {
+        this.visibility = visibility;
     }
 
     /**
@@ -108,7 +108,7 @@ public class Page {
         }
 
         public Builder setPageVisibility(PageVisibility pageVisibility) {
-            toBuild.setPageVisibility(pageVisibility);
+            toBuild.setVisibility(pageVisibility);
             return this;
         }
 
@@ -132,7 +132,7 @@ public class Page {
         if (collectionIds != null ? !collectionIds.equals(page.collectionIds) : page.collectionIds != null)
             return false;
         if (cardIds != null ? !cardIds.equals(page.cardIds) : page.cardIds != null) return false;
-        return pageVisibility != null ? pageVisibility.equals(page.pageVisibility) : page.pageVisibility == null;
+        return visibility != null ? visibility.equals(page.visibility) : page.visibility == null;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class Page {
         result = 31 * result + (locked != null ? locked.hashCode() : 0);
         result = 31 * result + (collectionIds != null ? collectionIds.hashCode() : 0);
         result = 31 * result + (cardIds != null ? cardIds.hashCode() : 0);
-        result = 31 * result + (pageVisibility != null ? pageVisibility.hashCode() : 0);
+        result = 31 * result + (visibility != null ? visibility.hashCode() : 0);
         return result;
     }
 }
