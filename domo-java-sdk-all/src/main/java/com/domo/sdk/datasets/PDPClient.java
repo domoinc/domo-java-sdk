@@ -1,7 +1,6 @@
 package com.domo.sdk.datasets;
 
 import com.domo.sdk.datasets.model.Policy;
-import com.domo.sdk.groups.model.Group;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.google.gson.reflect.TypeToken;
