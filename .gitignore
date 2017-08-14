@@ -3,3 +3,6 @@ build
 *.ipr
 *.iws
 .gradle/
+*.iml
+
+out/
