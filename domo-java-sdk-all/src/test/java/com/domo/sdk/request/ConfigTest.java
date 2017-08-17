@@ -20,7 +20,7 @@ public class ConfigTest {
   }
 
   private Config newConfig(String host) {
-    return new Config("a", "b", host, true, new ArrayList<>(), null, HttpLoggingInterceptor.Level.BASIC);
+    return Config.with().clientId("a").clientSecret("b").apiHost(host).scope(Scope.values()).build();
   }
 
 }

@@ -33,12 +33,7 @@ public class Config {
         this.scopes = Collections.unmodifiableList(scopes);
         this.apiHost = stripPrefix(apiHost);
         this.useHttps = useHttps;
-
-        if(httpLoggingLevel == null) {
-            this.httpLoggingLevel = HttpLoggingInterceptor.Level.NONE;
-        } else {
-            this.httpLoggingLevel = httpLoggingLevel;
-        }
+        this.httpLoggingLevel = httpLoggingLevel;
 
         if(httpClient == null) {
             throw new IllegalStateException("HttpClient is required");
@@ -95,16 +90,14 @@ public class Config {
         private boolean useHttps = true;
         private List<Scope> scopes = new ArrayList<>();
         private OkHttpClient httpClient;
-        private HttpLoggingInterceptor.Level httpLoggingLevel;
+
         private AtomicReference<Config> configRef = new AtomicReference<>();
+        private HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new Slf4jLoggingInterceptor());
 
         public Builder() {
         }
 
         public OkHttpClient.Builder defaultHttpClientBuilder() {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new Slf4jLoggingInterceptor());
-            logging.setLevel(this.httpLoggingLevel);
-
             return new OkHttpClient.Builder()
                     .readTimeout(60, TimeUnit.SECONDS)
                     .addInterceptor(new OAuthInterceptor(new UrlBuilder(configRef), configRef))
@@ -137,7 +130,7 @@ public class Config {
         }
 
         public Builder httpLoggingLevel(HttpLoggingInterceptor.Level level) {
-            this.httpLoggingLevel = level;
+            logging.setLevel(level);
             return this;
         }
 
@@ -159,7 +152,7 @@ public class Config {
                     this.useHttps,
                     this.scopes,
                     client,
-                    this.httpLoggingLevel);
+                    this.logging.getLevel());
             configRef.set(conf);
             return conf;
         }

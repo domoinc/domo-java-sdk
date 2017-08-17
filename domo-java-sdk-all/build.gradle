@@ -30,3 +30,19 @@ test {
     maxHeapSize = '512m'
 }
 
+
+publishing {
+    repositories {
+        maven {
+            if (project.hasProperty('nexusUsername') && project.hasProperty('nexusPassword')) {
+                credentials {
+                    username nexusUsername
+                    password nexusPassword
+                }
+            }
+            if (project.hasProperty('nexusReleaseUrl')) {
+                url nexusReleaseUrl
+            }
+        }
+    }
+}
