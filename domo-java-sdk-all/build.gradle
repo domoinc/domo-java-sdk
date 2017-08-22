@@ -23,6 +23,9 @@ dependencies {
 }
 
 test {
+    //Don't run example unit tests
+    exclude '**/*Example*'
+
     testLogging {
         events 'skipped', 'failed', 'standard_error'
         exceptionFormat 'full'
