@@ -36,7 +36,9 @@ public class ExportDataExample extends ExampleBase{
     System.out.println("Created:"+ds);
 
     //Import DS
-    String csvInput = "\"Pythagoras\",\"FALSE\"\n\"Alan Turing\",\"TRUE\"\n\"George Boole\",\"TRUE\"";
+    String csvInput = "\"Pythagoras\"\n" +
+            "\"Alan Turing\"\n" +
+            "\"George Boole\"";
     dsClient.importData(ds.getId(), csvInput);
 
     return ds.getId();

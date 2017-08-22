@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 public class OAuthInterceptor implements Interceptor {
-    private final AtomicReference<String> accessToken = new AtomicReference<String>("starterTokenTheIsInvalid");
+    private final AtomicReference<String> accessToken = new AtomicReference<String>("starterTokenThatIsInvalid");
 
     //Nested client and gson avoid circular dependency with Transport
     private final Gson gson = new Gson();
@@ -43,6 +43,13 @@ public class OAuthInterceptor implements Interceptor {
             return chain.proceed(request);
         }
 
+
+        if(tokenHasntBeenSetYet()) {
+            synchronized (accessToken) {
+                refreshToken();
+            }
+        }
+
         //Build new request
         Request.Builder builder = request.newBuilder();
 
@@ -52,7 +59,7 @@ public class OAuthInterceptor implements Interceptor {
         request = builder.build(); //overwrite old request
         Response response = chain.proceed(request); //perform request, here original request will be executed
 
-        if (response.code() == 401) { //if unauthorized
+        if (response.code() == 401 || csvCallNeedsToBeRefreshed(request, response)) { //if unauthorized
             synchronized (accessToken) { //perform all 401 in sync blocks, to avoid multiply token updates
                 String currentToken = accessToken.get(); //get currently stored token
 
@@ -76,6 +83,14 @@ public class OAuthInterceptor implements Interceptor {
         }
 
         return response;
+    }
+
+    private boolean csvCallNeedsToBeRefreshed(Request request, Response response) {
+        return ("text/csv".equals(request.header("Accept")) && response.code() == 406);
+    }
+
+    private boolean tokenHasntBeenSetYet() {
+        return accessToken.get().equals("starterTokenThatIsInvalid");
     }
 
     private void setAuthHeader(Request.Builder builder, String token) {
