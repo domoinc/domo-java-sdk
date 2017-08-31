@@ -12,7 +12,7 @@
 
 * The Domo API SDK is the simplest way to automate your Domo instance
 * The SDK streamlines the API programming experience, allowing you to significantly reduce your written code
-* This package is published to [maven central](https://maven-badges.herokuapp.com/maven-central/com.domo/domo-java-sdk) and [bintray jcenter](https://bintray.com/checketts/domo-java-sdk/domo-java-sdk/)
+* This package is published to [bintray jcenter](https://bintray.com/domoinc/domo-java-sdk/domo-java-sdk/_latestVersion)
 
 ### Features:
 - DataSet and Personalized Data Policy (PDP) Management
@@ -33,7 +33,7 @@
     - Docs: https://developer.domo.com/docs/domo-apis/group-apis
 
 ### Setup
- 
+
 <!---
 [![JCenter](https://img.shields.io/bintray/v/checketts/domo-java-sdk/domo-java-sdk.svg?label=jcenter)](https://bintray.com/checketts/domo-java-sdk/domo-java-sdk/_latestVersion)
 [![Maven Central](https://img.shields.io/maven-central/v/com.domo/domo-java-sdk.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.domo/domo-java-sdk)
@@ -45,7 +45,7 @@ It is currently hosted via bintray and JCenter (It will be in Maven central even
 ```groovy
 repositories {
     maven {
-        url  "http://dl.bintray.com/domoinc/domo-java-sdk" 
+        url  "http://dl.bintray.com/domoinc/domo-java-sdk"
     }
 }
 ```
@@ -83,9 +83,9 @@ Classic Jar Import:
 
 ```java
 public class Example {
-    
+
     public void domoSDKUsage() {
-        
+
         //Build an SDK configuration
         Config config = Config.with()
                 .clientId("MY_CLIENT_ID")
@@ -98,19 +98,19 @@ public class Example {
 
         //Create an instance of the SDK Client
         DomoClient domo = DomoClient.create(config);
-        
+
         //Manage DataSets
         DataSetClient datasets = domo.dataSetClient();
         datasets.create();
-        
+
         //Manage Streams
         StreamClient streams = domo.streamClient();
         streams.create();
-        
+
         //Manage Users
         UserClient users = domo.userClient();
         users.create();
-        
+
         //Manage User Groups
         GroupClient groups = domo.groupClient();
         groups.create();
