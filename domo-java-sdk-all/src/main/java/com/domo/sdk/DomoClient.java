@@ -8,6 +8,7 @@ import com.domo.sdk.request.Config;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
 import com.domo.sdk.streams.StreamClient;
+import com.domo.sdk.tasks.TasksClient;
 import com.domo.sdk.users.UserClient;
 
 /**
@@ -32,6 +33,7 @@ public class DomoClient {
     private final PageClient pageClient;
     private final PDPClient pdpClient;
     private final StreamClient streamClient;
+    private final TasksClient tasksClient;
 
     private final Transport transport;
     private final UrlBuilder urlBuilder;
@@ -48,6 +50,7 @@ public class DomoClient {
         this.pageClient = new PageClient(urlBuilder, transport);
         this.pdpClient = new PDPClient(urlBuilder, transport);
         this.streamClient = new StreamClient(urlBuilder, transport);
+        this.tasksClient = new TasksClient(urlBuilder, transport);
     }
 
     public static DomoClient create( String clientId, String secret) {
@@ -89,6 +92,10 @@ public class DomoClient {
         return streamClient;
     }
 
+    public TasksClient tasksClient() {
+        return tasksClient;
+    }
+
     public Transport getTransport() {
         return transport;
     }
@@ -96,4 +103,5 @@ public class DomoClient {
     public UrlBuilder getUrlBuilder() {
         return urlBuilder;
     }
+
 }
