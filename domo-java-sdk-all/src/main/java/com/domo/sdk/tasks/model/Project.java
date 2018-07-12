@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 public class Project {
     private String id;
@@ -96,31 +97,21 @@ public class Project {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Project project = (Project) o;
-
-        if (id != null ? !id.equals(project.id) : project.id != null) return false;
-        if (name != null ? !name.equals(project.name) : project.name != null) return false;
-        if (description != null ? !description.equals(project.description) : project.description != null) return false;
-        if (isPublic != null ? !isPublic.equals(project.isPublic) : project.isPublic != null) return false;
-        if (members != null ? !members.equals(project.members) : project.members != null) return false;
-        if (createdBy != null ? !createdBy.equals(project.createdBy) : project.createdBy != null) return false;
-        if (dueDate != null ? !dueDate.equals(project.dueDate) : project.dueDate != null) return false;
-        if (createdDate != null ? !createdDate.equals(project.createdDate) : project.createdDate != null) return false;
-        return updatedDate != null ? updatedDate.equals(project.updatedDate) : project.updatedDate == null;
+        return Objects.equals(id, project.id) &&
+                Objects.equals(name, project.name) &&
+                Objects.equals(description, project.description) &&
+                Objects.equals(isPublic, project.isPublic) &&
+                Objects.equals(members, project.members) &&
+                Objects.equals(createdBy, project.createdBy) &&
+                Objects.equals(dueDate, project.dueDate) &&
+                Objects.equals(createdDate, project.createdDate) &&
+                Objects.equals(updatedDate, project.updatedDate);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (isPublic != null ? isPublic.hashCode() : 0);
-        result = 31 * result + (members != null ? members.hashCode() : 0);
-        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
-        result = 31 * result + (dueDate != null ? dueDate.hashCode() : 0);
-        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        return result;
+
+        return Objects.hash(id, name, description, isPublic, members, createdBy, dueDate, createdDate, updatedDate);
     }
 }
