@@ -238,7 +238,7 @@ public class TasksClient {
         return transport.getJson(url, new TypeToken<List<Attachment>>() {}.getType());
     }
 
-    public void addAttachment(String projectId, String listId, String taskId, String filepath){
+    public Attachment addAttachment(String projectId, String listId, String taskId, String filepath){
         HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(projectId)
                 .addPathSegment("lists")
@@ -248,7 +248,7 @@ public class TasksClient {
                 .addPathSegment("attachments")
                 .build();
 
-        transport.uploadFile(url, filepath);
+        return transport.uploadFile(url, filepath);
     }
 
     public InputStream downloadAttachment(String projectId, String listId, String taskId, String attachmentId){

@@ -1,10 +1,10 @@
 package com.domo.sdk.tasks;
 
 import com.domo.sdk.ExampleBase;
+import com.domo.sdk.tasks.model.Attachment;
 import com.domo.sdk.tasks.model.Project;
 import com.domo.sdk.tasks.model.ProjectList;
 import com.domo.sdk.tasks.model.Task;
-import com.domo.sdk.tasks.model.Attachment;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.User;
 import org.apache.commons.io.IOUtils;
@@ -16,8 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CreateExample extends ExampleBase {
-
+public class ListExample extends ExampleBase {
     @Test
     public void tasksClient_smokeTest() throws IOException {
         TasksClient tasksClient = new TasksClient(client.getUrlBuilder(), client.getTransport());
@@ -32,11 +31,17 @@ public class CreateExample extends ExampleBase {
         project.setName("Test Project");
         Project projectResponse = tasksClient.createProject(project);
 
+        //List Projects
+        List<Project> projects = tasksClient.listProjects(10,0);
+
         //Create a List
         ProjectList list = new ProjectList();
         list.setName("Test List");
         list.setType(ProjectList.ListType.TODO);
         ProjectList listResponse = tasksClient.addProjectList(projectResponse.getId(), list);
+
+        //List ProjectLists
+        List<ProjectList> projectLists = tasksClient.getProjectLists(projectResponse.getId(), 10, 0);
 
         //Create a Task
         Task task = new Task();
@@ -49,6 +54,9 @@ public class CreateExample extends ExampleBase {
         task.setOwnedBy(user.getId());
         Task taskResponse = tasksClient.addTask(projectResponse.getId(), listResponse.getId(), task);
 
+        //List Tasks
+        List<Task> tasks = tasksClient.getTasks(projectResponse.getId(), listResponse.getId(), 10, 0);
+
         //Create attachment
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Domo.png");
         File file = File.createTempFile("domo", ".tmp");
@@ -56,6 +64,8 @@ public class CreateExample extends ExampleBase {
         OutputStream outputStream = new FileOutputStream(file);
         IOUtils.copy(inputStream, outputStream);
         Attachment attachmentResponse = tasksClient.addAttachment(projectResponse.getId(), listResponse.getId(), taskResponse.getId(), file.getPath());
-    }
 
+        //List attachments
+        List<Attachment> attachments = tasksClient.getAttachments(projectResponse.getId(), listResponse.getId(), taskResponse.getId(), 10, 0);
+    }
 }

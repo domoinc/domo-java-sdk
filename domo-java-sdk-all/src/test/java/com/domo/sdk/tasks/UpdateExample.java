@@ -4,10 +4,8 @@ import com.domo.sdk.ExampleBase;
 import com.domo.sdk.tasks.model.Project;
 import com.domo.sdk.tasks.model.ProjectList;
 import com.domo.sdk.tasks.model.Task;
-import com.domo.sdk.tasks.model.Attachment;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.User;
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.*;
@@ -16,8 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CreateExample extends ExampleBase {
-
+public class UpdateExample extends ExampleBase {
     @Test
     public void tasksClient_smokeTest() throws IOException {
         TasksClient tasksClient = new TasksClient(client.getUrlBuilder(), client.getTransport());
@@ -32,11 +29,19 @@ public class CreateExample extends ExampleBase {
         project.setName("Test Project");
         Project projectResponse = tasksClient.createProject(project);
 
+        //Update project
+        projectResponse.setName("Updated Project");
+        Project updatedProject = tasksClient.updateProject(projectResponse.getId(), projectResponse);
+
         //Create a List
         ProjectList list = new ProjectList();
         list.setName("Test List");
         list.setType(ProjectList.ListType.TODO);
         ProjectList listResponse = tasksClient.addProjectList(projectResponse.getId(), list);
+
+        //Update list
+        listResponse.setName("Updated List");
+        ProjectList updatedList = tasksClient.updateProjectList(updatedProject.getId(), listResponse.getId(), listResponse);
 
         //Create a Task
         Task task = new Task();
@@ -49,13 +54,8 @@ public class CreateExample extends ExampleBase {
         task.setOwnedBy(user.getId());
         Task taskResponse = tasksClient.addTask(projectResponse.getId(), listResponse.getId(), task);
 
-        //Create attachment
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Domo.png");
-        File file = File.createTempFile("domo", ".tmp");
-        file.deleteOnExit();
-        OutputStream outputStream = new FileOutputStream(file);
-        IOUtils.copy(inputStream, outputStream);
-        Attachment attachmentResponse = tasksClient.addAttachment(projectResponse.getId(), listResponse.getId(), taskResponse.getId(), file.getPath());
+        //Update Task
+        taskResponse.setTaskName("Updated Task");
+        Task updatedTask = tasksClient.updateTask(updatedProject.getId(), updatedList.getId(), taskResponse.getId(), taskResponse);
     }
-
 }

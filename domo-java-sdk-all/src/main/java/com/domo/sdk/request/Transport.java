@@ -1,5 +1,6 @@
 package com.domo.sdk.request;
 
+import com.domo.sdk.tasks.model.Attachment;
 import com.google.gson.Gson;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -155,7 +156,7 @@ public class Transport {
         }
     }
 
-    public void uploadFile(HttpUrl url, String filePath){
+    public Attachment uploadFile(HttpUrl url, String filePath){
         try {
             File file = new File(filePath);
             MediaType fileContentType = MediaType.parse(new MimetypesFileTypeMap().getContentType(file));
@@ -163,8 +164,8 @@ public class Transport {
                     .addFormDataPart("file", file.getName(), RequestBody.create(fileContentType, file)).build();
 
             Request request = new Request.Builder().url(url).post(multipartBody).build();
-            httpClient.newCall(request).execute();
-
+            Response response = httpClient.newCall(request).execute();
+            return gson.fromJson(response.body().charStream(), Attachment.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

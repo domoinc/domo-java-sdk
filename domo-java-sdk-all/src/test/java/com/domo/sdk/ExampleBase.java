@@ -6,6 +6,7 @@ import org.junit.Before;
 
 import static com.domo.sdk.request.Scope.DATA;
 import static com.domo.sdk.request.Scope.USER;
+import static com.domo.sdk.request.Scope.WORKFLOW;
 
 public class ExampleBase {
 
@@ -18,7 +19,7 @@ public class ExampleBase {
             .clientSecret("MY_CLIENT_SECRET")
             .apiHost("api.domo.com")
             .useHttps(true)
-            .scope(USER, DATA)
+            .scope(USER, DATA, WORKFLOW)
             .httpLoggingLevel(HttpLoggingInterceptor.Level.BODY)
             .build();
 

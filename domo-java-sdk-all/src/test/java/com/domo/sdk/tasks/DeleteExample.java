@@ -1,10 +1,10 @@
 package com.domo.sdk.tasks;
 
 import com.domo.sdk.ExampleBase;
+import com.domo.sdk.tasks.model.Attachment;
 import com.domo.sdk.tasks.model.Project;
 import com.domo.sdk.tasks.model.ProjectList;
 import com.domo.sdk.tasks.model.Task;
-import com.domo.sdk.tasks.model.Attachment;
 import com.domo.sdk.users.UserClient;
 import com.domo.sdk.users.model.User;
 import org.apache.commons.io.IOUtils;
@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CreateExample extends ExampleBase {
+public class DeleteExample extends ExampleBase {
 
     @Test
     public void tasksClient_smokeTest() throws IOException {
@@ -56,6 +56,14 @@ public class CreateExample extends ExampleBase {
         OutputStream outputStream = new FileOutputStream(file);
         IOUtils.copy(inputStream, outputStream);
         Attachment attachmentResponse = tasksClient.addAttachment(projectResponse.getId(), listResponse.getId(), taskResponse.getId(), file.getPath());
-    }
 
+        //Delete Attachment
+        tasksClient.deleteAttachment(projectResponse.getId(), taskResponse.getId(), attachmentResponse.getId().toString());
+
+        //Delete Task
+        tasksClient.deleteProjectList(projectResponse.getId(), listResponse.getId());
+
+        //Delete Project
+        tasksClient.deleteProject(projectResponse.getId());
+    }
 }
