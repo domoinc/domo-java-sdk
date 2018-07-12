@@ -1,14 +1,17 @@
 package com.domo.sdk.request;
 
-import com.domo.sdk.pages.model.Page;
+import com.domo.sdk.tasks.model.Attachment;
 import com.google.gson.Gson;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +41,7 @@ public class Transport {
 
         try(Response response = httpClient.newCall(request).execute()) {
             if(response.code() > 399) {
-                throw new RequestException("Error making request url:"+url.toString()+" reponseBody:"+response.body().source().readUtf8());
+                throw new RequestException(response.code(), "Error making request url:"+url.toString()+" reponseBody:"+response.body().source().readUtf8());
             }
             return gson.fromJson(response.body().charStream(), type);
         } catch (IOException e) {
@@ -140,5 +143,31 @@ public class Transport {
             throw new RequestException("Error uploading csv. url:"+url.toString(), e);
         }
 
+    }
+
+    public InputStream getFile(HttpUrl url){
+        Request request = new Request.Builder().url(url).build();
+        try {
+            Response response = httpClient.newCall(request).execute();
+            return new ByteArrayInputStream(response.body().bytes());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Attachment uploadFile(HttpUrl url, String filePath){
+        try {
+            File file = new File(filePath);
+            MediaType fileContentType = MediaType.parse(new MimetypesFileTypeMap().getContentType(file));
+            MultipartBody multipartBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("file", file.getName(), RequestBody.create(fileContentType, file)).build();
+
+            Request request = new Request.Builder().url(url).post(multipartBody).build();
+            Response response = httpClient.newCall(request).execute();
+            return gson.fromJson(response.body().charStream(), Attachment.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
