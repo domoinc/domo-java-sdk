@@ -1,5 +1,6 @@
 package com.domo.sdk;
 
+import com.domo.sdk.accounts.AccountClient;
 import com.domo.sdk.datasets.DataSetClient;
 import com.domo.sdk.datasets.PDPClient;
 import com.domo.sdk.groups.GroupClient;
@@ -13,10 +14,10 @@ import com.domo.sdk.users.UserClient;
 
 /**
  * <p>Threadsafe client for interacting with Domo Public APIs. See <a href="https://developer.domo.com/docs/domo-apis/getting-started">
- *     API docs</a> for complete details.
+ * API docs</a> for complete details.
  * </p>
  * <p><b>Use {@link DomoClient#create(String, String)} to instantiate this client.</b></p>
- *
+ * <p>
  * Usage:
  * <pre>
  * {@code Client client = Client.create("<your app id>","<your app secret>");
@@ -34,11 +35,12 @@ public class DomoClient {
     private final PDPClient pdpClient;
     private final StreamClient streamClient;
     private final TasksClient tasksClient;
+    private final AccountClient accountClient;
 
     private final Transport transport;
     private final UrlBuilder urlBuilder;
 
-    private DomoClient( Config config) {
+    private DomoClient(Config config) {
         this.config = config;
         this.urlBuilder = new UrlBuilder(config);
 
@@ -51,16 +53,18 @@ public class DomoClient {
         this.pdpClient = new PDPClient(urlBuilder, transport);
         this.streamClient = new StreamClient(urlBuilder, transport);
         this.tasksClient = new TasksClient(urlBuilder, transport);
+        this.accountClient = new AccountClient(urlBuilder, transport);
+
     }
 
-    public static DomoClient create( String clientId, String secret) {
+    public static DomoClient create(String clientId, String secret) {
         return new DomoClient(Config.with().clientId(clientId)
-                                        .clientSecret(secret)
-                                        .build()
-                );
+                .clientSecret(secret)
+                .build()
+        );
     }
 
-    public static DomoClient create( Config config) {
+    public static DomoClient create(Config config) {
         return new DomoClient(config);
     }
 
@@ -104,4 +108,7 @@ public class DomoClient {
         return urlBuilder;
     }
 
+    public AccountClient accountClient() {
+        return accountClient;
+    }
 }

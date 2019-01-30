@@ -31,6 +31,9 @@
 - Group Management
     - Create, update, and remove groups of users
     - Docs: https://developer.domo.com/docs/domo-apis/group-apis
+- Account Management
+    - Create, update, and remove accounts
+    - Docs: https://developer.domo.com/docs/domo-apis/accounts-api-reference
 
 ### Setup
 
