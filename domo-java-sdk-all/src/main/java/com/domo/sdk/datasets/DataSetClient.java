@@ -1,9 +1,6 @@
 package com.domo.sdk.datasets;
 
-import com.domo.sdk.datasets.model.CreateDataSetRequest;
-import com.domo.sdk.datasets.model.DataSet;
-import com.domo.sdk.datasets.model.DataSetAndPDP;
-import com.domo.sdk.datasets.model.DataSetListResult;
+import com.domo.sdk.datasets.model.*;
 import com.domo.sdk.request.RequestException;
 import com.domo.sdk.request.Transport;
 import com.domo.sdk.request.UrlBuilder;
@@ -22,6 +19,7 @@ public class DataSetClient {
     private final UrlBuilder urlBuilder;
     private final Transport transport;
     private static final String URL_BASE = "v1/datasets";
+    private static final String DATASET_QUERY_PATH = "query/execute";
 
     /**
      DataSets
@@ -105,6 +103,15 @@ public class DataSetClient {
                 .build();
 
         transport.deleteJson(url);
+    }
+
+    public QueryResultSet query(String id, IceBoxQueryRequest query){
+        HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
+                .addPathSegment(DATASET_QUERY_PATH)
+                .addPathSegment(id)
+                .build();
+
+        return transport.postJson(url, query, QueryResultSet.class);
     }
 
     /**
