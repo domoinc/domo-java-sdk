@@ -151,6 +151,16 @@ public class DataSetClient {
         return transport.getCsv(url);
     }
 
+    public InputStream query(String dataSetId, String queryString) {
+        HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
+                .addPathSegment("query")
+                .addPathSegment("execute")
+                .addPathSegment(dataSetId)
+                .build();
+
+        return transport.postQuery(url, queryString);
+    }
+
     /**
      * Export data to a CSV file
      * @param id the DataSet id
