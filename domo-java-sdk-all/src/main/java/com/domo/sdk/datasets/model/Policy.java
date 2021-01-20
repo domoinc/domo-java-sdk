@@ -8,6 +8,7 @@ public class Policy {
     private String name;
     private List<PolicyFilter> filters;
     private List<Long> users;
+    private List<String> virtualUsers;
     private List<Long> groups;
 
     public long getId() {
@@ -48,6 +49,14 @@ public class Policy {
 
     public void setUsers(List<Long> users) {
         this.users = users;
+    }
+
+    public List<String> getVirtualUsers() {
+        return virtualUsers;
+    }
+
+    public void setVirtualUsers(List<String> virtualUsers) {
+        this.virtualUsers = virtualUsers;
     }
 
     public List<Long> getGroups() {
