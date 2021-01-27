@@ -126,6 +126,22 @@ public class Transport {
         }
     }
 
+    public InputStream postQuery(HttpUrl url, String query) {
+        RequestBody requestBody = RequestBody.create(JSON, query);
+        Request request = new Request.Builder()
+                .url(url)
+                .method("POST", requestBody)
+                .build();
+
+        try {
+            Response response = httpClient.newCall(request).execute();
+            return new ByteArrayInputStream(response.body().bytes());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void putCsv(HttpUrl url, File contents) {
         RequestBody requestBody = RequestBody.create(CSV, contents);
         putCsvInternal(url, requestBody);
