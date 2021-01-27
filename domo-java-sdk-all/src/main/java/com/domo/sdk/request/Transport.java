@@ -49,6 +49,10 @@ public class Transport {
         }
     }
 
+    public void postJson(HttpUrl url, Object body) {
+        postJson(url, body, null);
+    }
+
     public <T> T postJson(HttpUrl url, Object body, Class<T> clazz) {
         return methodJson("POST", url, body, clazz);
     }
@@ -58,6 +62,10 @@ public class Transport {
     }
 
     public <T> T putJson(HttpUrl url, Object body, Class<T> clazz) { return methodJson("PUT", url, body, clazz); }
+
+    public <T> T patchJson(HttpUrl url, Object body) {
+        return methodJson("PATCH", url, body, null);
+    }
 
     public <T> T patchJson(HttpUrl url, Object body, Class<T> clazz) {
         return methodJson("PATCH", url, body, clazz);
