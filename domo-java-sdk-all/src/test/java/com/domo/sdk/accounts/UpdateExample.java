@@ -16,7 +16,7 @@ public class UpdateExample extends ExampleBase {
 
         account.setName("Bob Smith");
 
-        accountClient.update(account);
+        accountClient.update(account.getId(), account);
 
         System.out.println("Updated account: " + account);
     }
