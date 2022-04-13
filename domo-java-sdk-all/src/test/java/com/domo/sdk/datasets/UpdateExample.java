@@ -3,6 +3,7 @@ package com.domo.sdk.datasets;
 import com.domo.sdk.ExampleBase;
 import com.domo.sdk.datasets.model.Column;
 import com.domo.sdk.datasets.model.DataSet;
+import com.domo.sdk.datasets.model.Owner;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
 
@@ -24,6 +25,10 @@ public class UpdateExample extends ExampleBase {
     //Update DS
     ds.setName("Leonhard Euler Party - Update");
     ds.setDescription("Mathematician Guest List - Update");
+    Owner newOwner = new Owner();
+    newOwner.setName("Carl Friedrich Gauss");
+    newOwner.setId(28);
+    ds.setOwner(newOwner);
     ds.getSchema().setColumns(Lists.newArrayList(new Column(STRING, "Friend"), new Column(STRING, "Attending"), new Column(STRING, "Favorite Shape")));
     dsClient.update(ds);
   }
