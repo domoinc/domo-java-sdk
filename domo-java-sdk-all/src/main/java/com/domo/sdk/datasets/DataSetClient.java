@@ -24,11 +24,11 @@ public class DataSetClient {
     private static final String URL_BASE = "v1/datasets";
 
     /**
-     DataSets
-     - Programmatically manage Domo DataSets
-     - Use DataSets for fairly static data sources that only require occasional updates via data replacement
-     - Use Streams if your data source is massive, constantly changing, or rapidly growing
-     - Docs: https://developer.domo.com/docs/data-apis/data
+     * DataSets
+     * - Programmatically manage Domo DataSets
+     * - Use DataSets for fairly static data sources that only require occasional updates via data replacement
+     * - Use Streams if your data source is massive, constantly changing, or rapidly growing
+     * - Docs: https://developer.domo.com/docs/data-apis/data
      */
 
     public DataSetClient(UrlBuilder urlBuilder, Transport transport) {
@@ -38,6 +38,7 @@ public class DataSetClient {
 
     /**
      * Create a DataSet
+     *
      * @param dataSet the DataSet specifications
      * @return the created DataSet
      */
@@ -50,6 +51,7 @@ public class DataSetClient {
 
     /**
      * Get a DataSet
+     *
      * @param id the DataSet id
      * @return the DataSet, if it exists
      */
@@ -63,8 +65,9 @@ public class DataSetClient {
 
     /**
      * List DataSets
-     * @param sort the DataSet field property by which to sort the list
-     * @param limit the result set limit. The max is 50; use offset pagination to retrieve more DataSets
+     *
+     * @param sort   the DataSet field property by which to sort the list
+     * @param limit  the result set limit. The max is 50; use offset pagination to retrieve more DataSets
      * @param offset the result set offset for pagination purposes
      * @return a list of DataSets
      */
@@ -84,6 +87,7 @@ public class DataSetClient {
 
     /**
      * Update a DataSet
+     *
      * @param update the DataSet update
      * @return the updated DataSet
      */
@@ -97,6 +101,7 @@ public class DataSetClient {
 
     /**
      * Delete a DataSet
+     *
      * @param id the DataSet id
      */
     public void delete(String id) {
@@ -109,7 +114,8 @@ public class DataSetClient {
 
     /**
      * Import data from a CSV string
-     * @param id the DataSet id
+     *
+     * @param id       the DataSet id
      * @param contents the data contents in string CSV format
      */
     public void importData(String id, String contents) {
@@ -123,7 +129,8 @@ public class DataSetClient {
 
     /**
      * Import data from a CSV file
-     * @param id the DataSet id
+     *
+     * @param id       the DataSet id
      * @param contents the data contents in CSV format, from a file
      */
     public void importData(String id, File contents) {
@@ -137,8 +144,20 @@ public class DataSetClient {
 
     /**
      * Export CSV data as an InputStream
-     * @param id the DataSet id
+     *
+     * @param id            the DataSet id
      * @param includeHeader whether or not the CSV header row should be included
+     * @return a Java InputStream for data retrieval, be certain to close the input stream
+     */
+    public InputStream exportData(String id, boolean includeHeader) {
+        return exportData(id, includeHeader, null);
+    }
+
+    /**
+     * Export CSV data as an InputStream
+     *
+     * @param id                           the DataSet id
+     * @param includeHeader                whether or not the CSV header row should be included
      * @param disableFormulaInterpretation whether or not to use formula interpretation. When formula interpretation is disabled, data cells that could be interpreted as macros will be escaped with a '
      * @return a Java InputStream for data retrieval, be certain to close the input stream
      */
@@ -168,12 +187,24 @@ public class DataSetClient {
 
     /**
      * Export data to a CSV file
-     * @param id the DataSet id
+     *
+     * @param id            the DataSet id
      * @param includeHeader whether or not the CSV header row should be included
-     * @param disableFormulaInterpretation whether or not to use formula interpretation. When formula interpretation is disabled, data cells that could be interpreted as macros will be escaped with a '     
-     * @param file the file object to which the CSV data will be written
+     * @param file          the file object to which the CSV data will be written
      */
-    public void exportDataToFile( String id, boolean includeHeader, Boolean disableFormulaInterpretation,  File file) {
+    public void exportDataToFile(String id, boolean includeHeader, File file) {
+        exportDataToFile(id, includeHeader, null, file);
+    }
+
+    /**
+     * Export data to a CSV file
+     *
+     * @param id                           the DataSet id
+     * @param includeHeader                whether or not the CSV header row should be included
+     * @param disableFormulaInterpretation whether or not to use formula interpretation. When formula interpretation is disabled, data cells that could be interpreted as macros will be escaped with a '
+     * @param file                         the file object to which the CSV data will be written
+     */
+    public void exportDataToFile(String id, boolean includeHeader, Boolean disableFormulaInterpretation, File file) {
         BufferedInputStream input = new BufferedInputStream(exportData(id, includeHeader, disableFormulaInterpretation));
         try {
             OutputStream output = new FileOutputStream(file);
@@ -189,7 +220,7 @@ public class DataSetClient {
             output.close();
             input.close();
         } catch (IOException e) {
-            throw new RequestException("Error exporting data and writing to file:"+file, e);
+            throw new RequestException("Error exporting data and writing to file:" + file, e);
         }
 
     }
