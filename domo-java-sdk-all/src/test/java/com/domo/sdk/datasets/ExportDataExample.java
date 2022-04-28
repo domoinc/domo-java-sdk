@@ -18,14 +18,14 @@ public class ExportDataExample extends ExampleBase{
     String dataSetId = setupDataSet(dsClient);
 
     //Export DS
-    InputStream stream = dsClient.exportData(dataSetId,true);
+    InputStream stream = dsClient.exportData(dataSetId,true, false);
     String data = convertStreamToString(stream);
     stream.close();
     System.out.println(data);
 
     //Export to file
     File f = File.createTempFile("sample-export", ".csv");
-    dsClient.exportDataToFile(dataSetId,true, f);
+    dsClient.exportDataToFile(dataSetId,true, true, f);
     System.out.println("Wrote out file:"+f.getAbsolutePath());
 
   }

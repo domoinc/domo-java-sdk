@@ -139,14 +139,19 @@ public class DataSetClient {
      * Export CSV data as an InputStream
      * @param id the DataSet id
      * @param includeHeader whether or not the CSV header row should be included
+     * @param disableFormulaInterpretation whether or not to use formula interpretation. When formula interpretation is disabled, data cells that could be interpreted as macros will be escaped with a '
      * @return a Java InputStream for data retrieval, be certain to close the input stream
      */
-    public InputStream exportData(String id, boolean includeHeader) {
-        HttpUrl url = urlBuilder.fromPathSegments(URL_BASE)
+    public InputStream exportData(String id, boolean includeHeader, Boolean disableFormulaInterpretation) {
+        HttpUrl.Builder builder = urlBuilder.fromPathSegments(URL_BASE)
                 .addPathSegment(id)
                 .addPathSegment("data")
-                .addQueryParameter("includeHeader", Boolean.toString(includeHeader))
-                .build();
+                .addQueryParameter("includeHeader", Boolean.toString(includeHeader));
+        if (disableFormulaInterpretation != null) {
+            builder.addQueryParameter("disableFormulaInterpretation", Boolean.toString(disableFormulaInterpretation));
+        }
+
+        HttpUrl url = builder.build();
 
         return transport.getCsv(url);
     }
@@ -165,10 +170,11 @@ public class DataSetClient {
      * Export data to a CSV file
      * @param id the DataSet id
      * @param includeHeader whether or not the CSV header row should be included
+     * @param disableFormulaInterpretation whether or not to use formula interpretation. When formula interpretation is disabled, data cells that could be interpreted as macros will be escaped with a '     
      * @param file the file object to which the CSV data will be written
      */
-    public void exportDataToFile( String id, boolean includeHeader, File file) {
-        BufferedInputStream input = new BufferedInputStream(exportData(id, includeHeader));
+    public void exportDataToFile( String id, boolean includeHeader, Boolean disableFormulaInterpretation,  File file) {
+        BufferedInputStream input = new BufferedInputStream(exportData(id, includeHeader, disableFormulaInterpretation));
         try {
             OutputStream output = new FileOutputStream(file);
 
