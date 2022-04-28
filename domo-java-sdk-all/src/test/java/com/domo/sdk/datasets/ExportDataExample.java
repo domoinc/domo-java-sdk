@@ -25,7 +25,7 @@ public class ExportDataExample extends ExampleBase{
 
     //Export to file
     File f = File.createTempFile("sample-export", ".csv");
-    dsClient.exportDataToFile(dataSetId,true, true, f);
+    dsClient.exportDataToFile(dataSetId,true, false, f);
     System.out.println("Wrote out file:"+f.getAbsolutePath());
 
   }
