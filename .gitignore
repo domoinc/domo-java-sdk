@@ -4,5 +4,7 @@ build
 *.iws
 .gradle/
 *.iml
+.ideaDataSources
+.shelf
 
 out/
