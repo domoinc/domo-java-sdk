@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.ByteArrayInputStream;
@@ -82,15 +83,22 @@ public class Transport {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
+            ResponseBody respBody = response.body();
             if(response.isSuccessful()) {
                 if (clazz != null) {
-                    return gson.fromJson(response.body().charStream(), clazz);
+                    return gson.fromJson(respBody.charStream(), clazz);
                 } else {
                     return null;
                 }
             } else {
-                ErrorResponse err =  gson.fromJson(response.body().charStream(), ErrorResponse.class);
-                throw new RequestException(err);
+                String respBodyAsString = respBody != null ? respBody.string() : null;
+                if (respBodyAsString != null) {
+                    ErrorResponse err = gson.fromJson(respBodyAsString, ErrorResponse.class);
+                    if (err != null) {
+                        throw new RequestException(err);
+                    }
+                }
+                throw new RequestException(respBodyAsString);
             }
         } catch (IOException e) {
             throw new RequestException("Error making request, url:"+url.toString(), e);
